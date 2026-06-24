@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#3a2438">
+<link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjogIkN5Y2xvIFx1MjAxMyBaeWtsdXMgJiBFaXNwcnVuZyIsICJzaG9ydF9uYW1lIjogIkN5Y2xvIiwgInN0YXJ0X3VybCI6ICIuIiwgInNjb3BlIjogIi4iLCAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0IiwgImJhY2tncm91bmRfY29sb3IiOiAiIzNhMjQzOCIsICJ0aGVtZV9jb2xvciI6ICIjM2EyNDM4IiwgImxhbmciOiAiZGUiLCAiaWNvbnMiOiBbeyJzcmMiOiAiZGF0YTppbWFnZS9wbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFNQUFBQURBQ0FZQUFBQlMzR3dIQUFBR1hVbEVRVlI0bk8zZFQyNGNSUmpHNGU1Ukh3VWtieEFMUk93eEFrU2lrT0FFd1FHNEEyVHIyQ3hBSUhDd1RlN0FEWUFWY1piZVlKK0F3d3dMMDJIc21lbXBycTZxcjZyZTN5UFZ5Z1JYVDM5dmY5Vi9wdDN1djdYWFpHWmhQUUZFMTFwUG9OY1ovMzZLWGRPNi9XNFNDb3NBVVBSWVo3a3Vrb1VoWlFBb2ZManFheVY2RUZJRWdNS0hyK2hCaUJrQUNoK2hSQXRDRnlGYUZENWlDUjZFV2FqLzBYOG9mcVFRck02NlFHR2k4SkZha0c0UW9nTlEvTEEwcWY2bUJvRGlSdzY4NjNCS0FDaCs1TVNySHJ2V2J3VkY4U05IaTJia09ZRlBCNkQ0a2JOUjlUazJBQlEvU3VCY3AyTUNRUEdqSkU3MTZub2ZnT0pIaWJhZUU3aDBBSW9mSlJ1czN4alBBZ0hGMk5ZQk9QcWpCaHZyZUNnQUZEOXFzcmFlUXo4TkNoUmxVd0E0K3FOR0szWGQ1Zk9DQ2lDOXJsMU5BRWQvMU96V3ZRSE9BU0R0YmdBNCtrUEJtenFuQTBEYWNnQTQra1BKb21ub0FCREhzMENRMW5jQWxqOVF0QWoxWGlDZ1NKd0RRQnFQUWtBYUhRRFN1cFlUWUFpakEwQWFBWUEwQWdCcDNBZUFORG9BcFBFc0VLVFJBWXk5L09CejZ5bElJd0NHK3VJbkJIWUlBS1Mxbit4OHlKMWdBeS8zVjQvNlgxLytiakFUYlhRQVNHdnY3M3hFQjBqczEvMm5HMy8yemVVZkNXY0NPZ0NrRVlERWhvNytMajlIV0FRQTBnaEFRcTVIZDdwQU9nUUEwdG9IWEFWSzR0empxUDZNSzBMUjBRRWdyWDJ3OHpFZElMTHovU2ZlLy9iWjVaOEJaNEs3ZUMxS1pPZHovK0p2bW9idkswWEdFaWh6a3dPRVFRUWdJb28zZjdPMnVlbXlqUEFqbFBQNUUvTnRxWFhRQVNJNTQraGZCQUpRQ0FJVkJ3R0lnR0l0eDh4K0ZWYmppT01tV05iYlZ0ZWdBd1IyTmord25nSkc0Q3BRNEJIYjJmekFmQnRyR25TQWdFNDUraGRuWmg3Qm1rWWlwL01EKzIydFpOQUJBam5kNCtoZklnSlFLQUlYQmdFSXdLb1lDY0YwWFp0eThWcWhYL1krTS8zOTdMOXA2QUNGc3c1ZzZRakFCQlJmK1FoQUJRaWlQd0xnaWFLckF3R29CSUgwdzk4STgvQWkwMkpqWDQ1SEI2aElyc0hNV2RlMEhEZkdlTEg3MkhvS3c5aWZvOUFCS3BOOVFETkRBRWFndU9wREFDcEVVTjF4RmNqUlNXRkZ4WDUxUXdkd1VGcnhOMDJaYzdaQUFMWW91WkJLbm5zcUJBRFNlQy9Rd0tqaENIcXpEZmFmWmE2RERnQnB2QmRvd3pqWmZUVGxjODNLeWU0ajg4OHoxOEZmaUZIQmZsNkxKZEFhUDkrcjUramZxM0diUXVpc0oxQ2J0NTkvdGZhdjJ2M3p3Mis4TWpwRGRJQTdwaHdwTnhYL3RwK2xRaGRZUlFjSXdMVzQrLytPYnBBUDNnc2todjE5RzB1Z0pUL2QrM1Qwdi9GWjJsZ3VoM3kyc1dZRVlJSXBoWnpET1FFSUFNUVJBRWdqQUpEVzhSSUJQZXp6LzlFQklJM3ZBOXdhNDB5NW9XVjdNOHo2Yzg1bjBBRW04aWxrN2dUbmd3QkFHczhDQmRBZjBiZmQzT0xJbngrK0ViWTBwaG9xOEp5SzMvcHp6bW84ZmVmaFl1TG5XWlVmMzM5b1BZV29Edi8reTNvS1dlRWNBTklJQUtSMVlWYS9LQWY3ZTluTS9pd2tyM0Y0OVdyaVI1cXZ3NnRYNXA5dmJvTzNRd3RoWDYvaUhHQ041eFYyZ1JxM0tRUUNBR2tFWUlPYWpwZzFiVXRvQkFEU0NNQ0FHbzZjTld4RFRMd1hxSExzMzJGMGdDMk9yaTZzcCtDdDVMbW5RZ0FjbEZoSUpjN1pBZ0Z3VkZKQmxUUlhhd1JnaEJJS3E0UTU1b1JuZ1VhT28rdDhDK3pvK3NMODh5bHQ4STB3ajNHY1lRaU9yeS9NUDVjU0Iwc2dUem1GSUtlNWxLYjk0dDNIZkNWeW91L2Z1Mi95ZTQrdlg1djgzcHJRQVFLd0tFU0tQd3c2UUdDeHV3R0ZIeFlCaUNoVUdDajZlTm92Q1VBeTN6a0c0bHNLUGhrQ0FHbWNCRU1hQVlDMGpqOFhBbVYwQUVqanZVQ1FSZ2VBTkFJQWFRUUEwZ2dBcEJFQVNPTzlRSkJHQjRBMEFnQnBIU3NnS0tNRFFCb0JnRFNlQllJME9nQ2s4WGVDSVkwT0FHa0VBTklJQUtSeEZRalNaZzFud1JER0VnalNlQllJMHJnUEFHa3NnU0N0dndyVU5rM0RTM0tocHFVRFFCb0JnTFRsQUhBMkRDVnQwOUFCSU81dUFPZ0NVUENtem5rdkVLU3RXd0tSQ05Uc1ZuM3pLQVNrYlRvSkpoYW8wVXBkY3hVSTBvWUNRQmRBVGRiVzg3WnZoUEdNRUdxd3NjeFpBa0dheS9jQjZBSW8yV0NCdTNZQXpnZFFvcTExTzJZSlJBaFFFcWQ2SFhzT1FBaFFBdWM2OVhrdkVPY0V5Tm1va3ZaOUZJSVFJRWVqcTNuS1pWQ1dROGlKVnoxT3ZROUFDSkFEN3pvTThWNGdsa093TkttQXU4Q1RJQWhJSmNqcUkvVGJvZWtHU0NGWTJZYnFBTXZvQm9nbCtEbG5qQUQwQ0FKQ2lYYXhKV1lBZWdRQnZxSmZaVXdSZ0I1QmdLdGtsOWRUQnFDM3ZIR0VBVDJUZTByL0FtWVBBYWtnQThHY0FBQUFBRWxGVGtTdVFtQ0MiLCAic2l6ZXMiOiAiMTkyeDE5MiIsICJ0eXBlIjogImltYWdlL3BuZyJ9LCB7InNyYyI6ICJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQU1BQUFBREFDQVlBQUFCUzNHd0hBQUFHWFVsRVFWUjRuTzNkVDI0Y1JSakc0ZTVSSHdVa2J4QUxST3d4QWtTaWtPQUV3UUc0QTJUcjJDeEFJSEN3VGU3QURZQVZjWmJlWUorQXd3d0wwMkhzbWVtcHJxNnFyNnJlM3lQVnlnUlhUMzl2ZjlWL3B0M3V2N1hYWkdaaFBRRkUxMXBQb05jWi8zNktYZE82L1c0U0Nvc0FVUFJZWjdrdWtvVWhaUUFvZkxqcWF5VjZFRklFZ01LSHIraEJpQmtBQ2graFJBdENGeUZhRkQ1aUNSNkVXYWovMFg4b2ZxUVFyTTY2UUdHaThKRmFrRzRRb2dOUS9MQTBxZjZtQm9EaVJ3Njg2M0JLQUNoKzVNU3JIcnZXYndWRjhTTkhpMmJrT1lGUEI2RDRrYk5SOVRrMkFCUS9TdUJjcDJNQ1FQR2pKRTcxNm5vZmdPSkhpYmFlRTdoMEFJb2ZKUnVzM3hqUEFnSEYyTllCT1BxakJodnJlQ2dBRkQ5cXNyYWVRejhOQ2hSbFV3QTQrcU5HSzNYZDVmT0NDaUM5cmwxTkFFZC8xT3pXdlFIT0FTRHRiZ0E0K2tQQm16cW5BMERhY2dBNCtrUEpvbW5vQUJESHMwQ1ExbmNBbGo5UXRBajFYaUNnU0p3RFFCcVBRa0FhSFFEU3VwWVRZQWlqQTBBYUFZQTBBZ0JwM0FlQU5Eb0FwUEVzRUtUUkFZeTkvT0J6NnlsSUl3Q0crdUluQkhZSUFLUzFuK3g4eUoxZ0F5LzNWNC82WDEvK2JqQVRiWFFBU0d2djczeEVCMGpzMS8ybkczLzJ6ZVVmQ1djQ09nQ2tFWURFaG83K0xqOUhXQVFBMGdoQVFxNUhkN3BBT2dRQTB0b0hYQVZLNHR6anFQNk1LMExSMFFFZ3JYMnc4ekVkSUxMei9TZmUvL2JaNVo4Qlo0SzdlQzFLWk9kei8rSnZtb2J2SzBYR0VpaHprd09FUVFRZ0lvbzNmN08ydWVteWpQQWpsUFA1RS9OdHFYWFFBU0k1NCtoZkJBSlFDQUlWQndHSWdHSXR4OHgrRlZiamlPTW1XTmJiVnRlZ0F3UjJOait3bmdKRzRDcFE0QkhiMmZ6QWZCdHJHblNBZ0U0NStoZG5aaDdCbWtZaXAvTUQrMjJ0Wk5BQkFqbmQ0K2hmSWdKUUtBSVhCZ0VJd0tvWUNjRjBYWnR5OFZxaFgvWStNLzM5N0w5cDZBQ0ZzdzVnNlFqQUJCUmYrUWhBQlFpaVB3TGdpYUtyQXdHb0JJSDB3OThJOC9BaTAySmpYNDVIQjZoSXJzSE1XZGUwSERmR2VMSDcySG9LdzlpZm85QUJLcE45UUROREFFYWd1T3BEQUNwRVVOMXhGY2pSU1dGRnhYNTFRd2R3VUZyeE4wMlpjN1pBQUxZb3VaQktubnNxQkFEU2VDL1F3S2poQ0hxekRmYWZaYTZERGdCcHZCZG93empaZlRUbGM4M0t5ZTRqODg4ejE4RmZpRkhCZmw2TEpkQWFQOStyNStqZnEzR2JRdWlzSjFDYnQ1OS90ZmF2MnYzencyKzhNanBEZElBN3Bod3BOeFgvdHArbFFoZFlSUWNJd0xXNCsvK09icEFQM2dza2h2MTlHMHVnSlQvZCszVDB2L0ZaMmxndWgzeTJzV1lFWUlJcGhaekRPUUVJQU1RUkFFZ2pBSkRXOFJJQlBlenovOUVCSUkzdkE5d2E0MHk1b1dWN004ejZjODVuMEFFbThpbGs3Z1RuZ3dCQUdzOENCZEFmMGJmZDNPTElueCsrRWJZMHBob3E4SnlLMy9wenptbzhmZWZoWXVMbldaVWYzMzlvUFlXb0R2Lyt5M29LV2VFY0FOSUlBS1IxWVZhL0tBZjdlOW5NL2l3a3IzRjQ5V3JpUjVxdnc2dFg1cDl2Ym9PM1F3dGhYNi9pSEdDTjV4VjJnUnEzS1FRQ0FHa0VZSU9hanBnMWJVdG9CQURTQ01DQUdvNmNOV3hEVEx3WHFITHMzMkYwZ0MyT3JpNnNwK0N0NUxtblFnQWNsRmhJSmM3WkFnRndWRkpCbFRSWGF3UmdoQklLcTRRNTVvUm5nVWFPbyt0OEMrem8rc0w4OHlsdDhJMHdqM0djWVFpT3J5L01QNWNTQjBzZ1R6bUZJS2U1bEtiOTR0M0hmQ1Z5b3UvZnUyL3llNCt2WDV2ODNwclFBUUt3S0VTS1B3dzZRR0N4dXdHRkh4WUJpQ2hVR0NqNmVOb3ZDVUF5M3prRzRsc0tQaGtDQUdtY0JFTWFBWUMwamo4WEFtVjBBRWpqdlVDUVJnZUFOQUlBYVFRQTBnZ0FwQkVBU09POVFKQkdCNEEwQWdCcEhTc2dLS01EUUJvQmdEU2VCWUkwT2dDazhYZUNJWTBPQUdrRUFOSUlBS1J4RlFqU1pnMW53UkRHRWdqU2VCWUkwcmdQQUdrc2dTQ3R2d3JVTmszRFMzS2hwcVVEUUJvQmdMVGxBSEEyRENWdDA5QUJJTzV1QU9nQ1VQQ216bmt2RUtTdFd3S1JDTlRzVm4zektBU2tiVG9KSmhhbzBVcGRjeFVJMG9ZQ1FCZEFUZGJXODdadmhQR01FR3F3c2N4WkFrR2F5L2NCNkFJbzJXQ0J1M1lBemdkUW9xMTFPMllKUkFoUUVxZDZIWHNPUUFoUUF1YzY5WGt2RU9jRXlObW9rdlo5RklJUUlFZWpxM25LWlZDV1E4aUpWejFPdlE5QUNKQUQ3em9NOFY0Z2xrT3dOS21BdThDVElBaElKY2pxSS9UYm9la0dTQ0ZZMllicUFNdm9Cb2dsK0RsbmpBRDBDQUpDaVhheEpXWUFlZ1FCdnFKZlpVd1JnQjVCZ0t0a2w5ZFRCcUMzdkhHRUFUMlRlMHIvQW1ZUEFha2dBOEdjQUFBQUFFbEZUa1N1UW1DQyIsICJzaXplcyI6ICI1MTJ4NTEyIiwgInR5cGUiOiAiaW1hZ2UvcG5nIiwgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIn1dfQ==">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAGXUlEQVR4nO3dT24cRRjG4e5RHwUkbxALROwxAkSikOAEwQG4A2Tr2CxAIHCwTe7ADYAVcZbeYJ+AwwwL02Hsmemprq6qr6re3yPVygRXT39vf9V/pt3uv7XXZGZhPQFE11pPoNcZ/36KXdO6/W4SCosAUPRYZ7kukoUhZQAofLjqayV6EFIEgMKHr+hBiBkACh+hRAtCFyFaFD5iCR6EWaj/0X8ofqQQrM66QGGi8JFakG4QogNQ/LA0qf6mBoDiRw6863BKACh+5MSrHrvWbwVF8SNHi2bkOYFPB6D4kbNR9Tk2ABQ/SuBcp2MCQPGjJE716nofgOJHibaeE7h0AIofJRus3xjPAgHF2NYBOPqjBhvreCgAFD9qsraeQz8NChRlUwA4+qNGK3Xd5fOCCiC9rl1NAEd/1OzWvQHOASDtbgA4+kPBmzqnA0DacgA4+kPJomnoABDHs0CQ1ncAlj9QtAj1XiCgSJwDQBqPQkAaHQDSupYTYAijA0AaAYA0AgBp3AeANDoApPEsEKTRAYy9/OBz6ylIIwCG+uInBHYIAKS1n+x8yJ1gAy/3V4/6X1/+bjATbXQASGvv73xEB0js1/2nG3/2zeUfCWcCOgCkEYDEho7+Lj9HWAQA0ghAQq5Hd7pAOgQA0toHXAVK4tzjqP6MK0LR0QEgrX2w8zEdILLz/Sfe//bZ5Z8BZ4K7eC1KZOdz/+JvmobvK0XGEihzkwOEQQQgIoo3f7O2uemyjPAjlPP5E/NtqXXQASI54+hfBAJQCAIVBwGIgGItx8x+FVbjiOMmWNbbVtegAwR2Nj+wngJG4CpQ4BHb2fzAfBtrGnSAgE45+hdnZh7BmkYip/MD+22tZNABAjnd4+hfIgJQKAIXBgEIwKoYCcF0XZty8VqhX/Y+M/397L9p6ACFsw5g6QjABBRf+QhABQiiPwLgiaKrAwGoBIH0w98I8/Ai02JjX45HB6hIrsHMWde0HDfGeLH72HoKw9ifo9ABKpN9QDNDAEaguOpDACpEUN1xFcjRSWFFxX51QwdwUFrxN02Zc7ZAALYouZBKnnsqBADSeC/QwKjhCHqzDfafZa6DDgBpvBdowzjZfTTlc83Kye4j888z18FfiFHBfl6LJdAaP9+r5+jfq3GbQuisJ1Cbt59/tfav2v3zw2+8MjpDdIA7phwpNxX/tp+lQhdYRQcIwLW4+/+ObpAP3gskhv19G0ugJT/d+3T0v/FZ2lguh3y2sWYEYIIphZzDOQEIAMQRAEgjAJDW8RIBPezz/9EBII3vA9wa40y5oWV7M8z6c85n0AEm8ilk7gTngwBAGs8CBdAf0bfd3OLInx++EbY0phoq8JyK3/pzzmo8fefhYuLnWZUf339oPYWoDv/+y3oKWeEcANIIAKR1YVa/KAf7e9nM/iwkr3F49WriR5qvw6tX5p9vboO3QwthX6/iHGCN5xV2gRq3KQQCAGkEYIOajpg1bUtoBADSCMCAGo6cNWxDTLwXqHLs32F0gC2Ori6sp+Ct5LmnQgAclFhIJc7ZAgFwVFJBlTRXawRghBIKq4Q55oRngUaOo+t8C+zo+sL88ylt8I0wj3GcYQiOry/MP5cSB0sgTzmFIKe5lKb94t3HfCVyou/fu2/ye4+vX5v83prQAQKwKESKPww6QGCxuwGFHxYBiChUGCj6eNovCUAy3zkG4lsKPhkCAGmcBEMaAYC0jj8XAmV0AEjjvUCQRgeANAIAaQQA0ggApBEASOO9QJBGB4A0AgBpHSsgKKMDQBoBgDSeBYI0OgCk8XeCIY0OAGkEANIIAKRxFQjSZg1nwRDGEgjSeBYI0rgPAGksgSCtvwrUNk3DS3KhpqUDQBoBgLTlAHA2DCVt09ABIO5uAOgCUPCmznkvEKStWwKRCNTsVn3zKASkbToJJhao0UpdcxUI0oYCQBdATdbW87ZvhPGMEGqwscxZAkGay/cB6AIo2WCBu3YAzgdQoq11O2YJRAhQEqd6HXsOQAhQAuc69XkvEOcEyNmokvZ9FIIQIEejq3nKZVCWQ8iJVz1OvQ9ACJAD7zoM8V4glkOwNKmAu8CTIAhIJcjqI/TboekGSCFY2YbqAMvoBogl+DlnjAD0CAJCiXaxJWYAegQBvqJfZUwRgB5BgKtkl9dTBqC3vHGEAT2Te0r/AmYPAakgA8GcAAAAAElFTkSuQmCC">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cyclo">
+<title>Cyclo – Zyklus & Eisprung</title>
+<style>
+  :root{
+    --ink:#2c1b2b; --ink2:#6a5566; --paper:#fbf6f4; --card:#ffffff;
+    --rose:#d2628a; --rose-soft:#f7dde6; --plum:#3a2438;
+    --fertile-soft:#dff1ec; --ovu:#5fbfa9;
+    --period:#e0567f; --pred:#e9c3d2; --line:#efe3e6;
+    --ok:#3fae8e; --warn:#e0a23c; --danger:#e0567f;
+    --shadow:0 8px 30px rgba(58,36,56,.08);
+    --safe-top:env(safe-area-inset-top); --safe-bot:env(safe-area-inset-bottom);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;overscroll-behavior:none}
+  body{padding:var(--safe-top) 0 calc(96px + var(--safe-bot));max-width:560px;margin:0 auto}
+  header{padding:18px 20px 6px;display:flex;justify-content:space-between;align-items:center}
+  h1{font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--rose);margin:0;font-weight:700}
+  .icon-btn{background:var(--rose-soft);border:none;border-radius:12px;width:38px;height:38px;font-size:18px;cursor:pointer;color:var(--rose)}
+  .hero{background:linear-gradient(160deg,var(--plum),#5a3550);color:#fff;
+    margin:12px 16px;border-radius:24px;padding:22px;box-shadow:var(--shadow)}
+  .hero .phase{font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.75}
+  .hero .big{font-size:32px;font-weight:800;line-height:1.05;margin:6px 0 2px}
+  .hero .sub{opacity:.85;font-size:14px}
+  .ring{display:flex;gap:10px;margin-top:16px}
+  .ring div{flex:1;background:rgba(255,255,255,.1);border-radius:14px;padding:11px 12px}
+  .ring b{display:block;font-size:17px;font-weight:800}
+  .ring span{font-size:10px;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
+  section{background:var(--card);margin:12px 16px;border-radius:20px;padding:18px;box-shadow:var(--shadow)}
+  .row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .row h2{font-size:16px;margin:0}
+  .cal-head{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;
+    font-size:11px;color:var(--ink2);text-transform:uppercase;margin-bottom:6px}
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .day{aspect-ratio:1;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    font-size:14px;cursor:pointer;border:1.5px solid transparent;position:relative}
+  .day.empty{visibility:hidden}
+  .day.today{border-color:var(--plum);font-weight:800}
+  .day.period{background:var(--period);color:#fff}
+  .day.pred{background:var(--pred)}
+  .day.fertile{background:var(--fertile-soft)}
+  .day.ovu{background:var(--ovu);color:#fff;font-weight:800}
+  .day .dot{position:absolute;bottom:5px;width:5px;height:5px;border-radius:50%;background:var(--rose)}
+  .day.period .dot,.day.ovu .dot{background:#fff}
+  .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--ink2);margin-top:12px}
+  .legend i{display:inline-block;width:11px;height:11px;border-radius:4px;margin-right:5px;vertical-align:-1px}
+  .nav{background:none;border:none;font-size:22px;cursor:pointer;color:var(--plum);padding:4px 10px}
+  .btn{background:var(--rose);color:#fff;border:none;border-radius:14px;padding:13px 18px;
+    font-size:15px;font-weight:700;width:100%;cursor:pointer}
+  .btn.ghost{background:var(--rose-soft);color:var(--rose)}
+  .btn.line{background:none;border:1.5px solid var(--line);color:var(--ink2)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{background:var(--paper);border:1.5px solid var(--line);border-radius:20px;padding:8px 14px;
+    font-size:13px;cursor:pointer;color:var(--ink2)}
+  .chip.on{background:var(--rose-soft);border-color:var(--rose);color:var(--rose);font-weight:700}
+  label.fld{display:block;font-size:12px;color:var(--ink2);margin:14px 0 4px;text-transform:uppercase;letter-spacing:.04em}
+  input[type=number],input[type=date],input[type=time]{width:100%;padding:11px 12px;border:1.5px solid var(--line);
+    border-radius:12px;font-size:15px;font-family:inherit;background:var(--paper);color:var(--ink)}
+  .sheet{position:fixed;inset:0;background:rgba(44,27,43,.45);display:none;align-items:flex-end;z-index:50}
+  .sheet.open{display:flex}
+  .sheet-inner{background:var(--card);width:100%;max-width:560px;margin:0 auto;border-radius:24px 24px 0 0;
+    padding:20px 20px calc(28px + var(--safe-bot));max-height:90vh;overflow:auto}
+  .sheet h3{margin:0 0 4px;font-size:20px}
+  .sheet .sub{color:var(--ink2);font-size:13px;margin-bottom:8px}
+  .tabs{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);
+    display:flex;max-width:560px;margin:0 auto;padding:8px 0 calc(8px + var(--safe-bot));z-index:40}
+  .tab{flex:1;text-align:center;font-size:10.5px;color:var(--ink2);background:none;border:none;cursor:pointer}
+  .tab .ic{font-size:21px;display:block;margin-bottom:2px}
+  .tab.on{color:var(--rose);font-weight:700}
+  .hide{display:none}
+  .stat{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .stat:last-child{border:none}
+  .stat b{font-weight:700}
+  .note{background:var(--fertile-soft);border-radius:14px;padding:12px 14px;font-size:12.5px;color:#2f5d54;line-height:1.5}
+  .warn{background:#fff3cd;border-radius:14px;padding:12px 14px;font-size:12.5px;color:#7a5b00;line-height:1.5;margin-top:10px}
+  .ampel{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;margin-bottom:8px}
+  .ampel .big{font-size:18px;font-weight:800}
+  .ampel.ok{background:#e6f6f0;color:#1e6b54}
+  .ampel.warn{background:#fff1da;color:#8a5a10}
+  .ampel.danger{background:var(--period-soft,#fbe0e8);color:#a3274f}
+  .dotbig{width:16px;height:16px;border-radius:50%}
+  .logitem{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .logitem small{color:var(--ink2)}
+  .x{background:none;border:none;font-size:22px;color:var(--ink2);cursor:pointer;line-height:1}
+  .chat{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+  .msg{max-width:85%;padding:11px 14px;border-radius:16px;font-size:14px;line-height:1.5}
+  .msg.bot{background:var(--paper);align-self:flex-start;border-bottom-left-radius:5px}
+  .msg.me{background:var(--rose);color:#fff;align-self:flex-end;border-bottom-right-radius:5px}
+  .quick{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}
+  .quick button{background:var(--rose-soft);color:var(--rose);border:none;border-radius:16px;padding:7px 12px;font-size:12.5px;cursor:pointer}
+  .ask{display:flex;gap:8px}
+  .ask input{flex:1}
+  .menu-item{display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;background:var(--paper);
+    margin-bottom:8px;cursor:pointer;font-size:15px;border:none;width:100%;text-align:left;color:var(--ink)}
+  .menu-item .mic{font-size:20px}
+  .toggle{position:relative;width:46px;height:28px;background:var(--line);border-radius:20px;cursor:pointer;flex:none;transition:.2s}
+  .toggle.on{background:var(--ok)}
+  .toggle::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;background:#fff;border-radius:50%;transition:.2s}
+  .toggle.on::after{left:21px}
+  @media print{ body{padding:0} .tabs,.hero,header,.no-print{display:none} section{box-shadow:none;margin:0;page-break-inside:avoid} }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Cyclo</h1>
+  <button class="icon-btn" onclick="setTab('More')">⚙︎</button>
+</header>
+
+<div class="hero" id="hero">
+  <div class="phase" id="phase">Phase</div>
+  <div class="big" id="heroBig">–</div>
+  <div class="sub" id="heroSub"></div>
+  <div class="ring">
+    <div><span>Periode</span><b id="rNext">–</b></div>
+    <div><span>Eisprung</span><b id="rOvu">–</b></div>
+    <div><span>Ø Zyklus</span><b id="rAvg">–</b></div>
+  </div>
+</div>
+
+<!-- KALENDER -->
+<div id="vCal">
+  <section>
+    <div class="row">
+      <button class="nav" onclick="moveMonth(-1)">‹</button>
+      <h2 id="monthLbl"></h2>
+      <button class="nav" onclick="moveMonth(1)">›</button>
+    </div>
+    <div class="cal-head"><div>Mo</div><div>Di</div><div>Mi</div><div>Do</div><div>Fr</div><div>Sa</div><div>So</div></div>
+    <div class="cal" id="cal"></div>
+    <div class="legend">
+      <span><i style="background:var(--period)"></i>Periode</span>
+      <span><i style="background:var(--pred)"></i>Vorhersage</span>
+      <span><i style="background:var(--fertile-soft)"></i>Fruchtbar</span>
+      <span><i style="background:var(--ovu)"></i>Eisprung</span>
+    </div>
+  </section>
+  <section>
+    <button class="btn" onclick="openSheet('period')">Periode eintragen</button>
+    <button class="btn ghost" style="margin-top:10px" onclick="openSheet('day')">Heute eintragen (Symptome, Temp …)</button>
+  </section>
+</div>
+
+<!-- INSIGHTS -->
+<div id="vIns" class="hide">
+  <section>
+    <div class="row"><h2>Heute</h2></div>
+    <div id="ampel"></div>
+    <div class="note" id="todayTip"></div>
+  </section>
+  <section>
+    <div class="row"><h2>Vorhersage</h2></div>
+    <div class="stat"><span>Nächste Periode</span><b id="iNext">–</b></div>
+    <div class="stat"><span>Fruchtbares Fenster</span><b id="iFert">–</b></div>
+    <div class="stat"><span>Eisprung (Schätzung)</span><b id="iOvu">–</b></div>
+    <div class="stat"><span>Eisprung (Temp. bestätigt)</span><b id="iOvuT">–</b></div>
+    <div class="warn">Kalender-/Temperaturmethode ist <b>keine sichere Verhütung</b>. Zusätzlich Kondom/Pille verwenden und mit dem Frauenarzt sprechen.</div>
+  </section>
+  <section>
+    <div class="row"><h2>PMS-Muster</h2></div>
+    <div id="pms"></div>
+  </section>
+  <section>
+    <div class="row"><h2>Statistik</h2></div>
+    <div class="stat"><span>Ø Zykluslänge</span><b id="sAvg">–</b></div>
+    <div class="stat"><span>Schwankung</span><b id="sVar">–</b></div>
+    <div class="stat"><span>Ø Periodenlänge</span><b id="sPer">–</b></div>
+    <div class="stat"><span>Erfasste Zyklen</span><b id="sCnt">–</b></div>
+  </section>
+</div>
+
+<!-- ASSISTANT -->
+<div id="vChat" class="hide">
+  <section>
+    <div class="row"><h2>Health Assistant</h2></div>
+    <div class="sub" style="color:var(--ink2);font-size:12.5px;margin-bottom:12px">Fragen zu Zyklus, Symptomen & Co. Offline. Kein Arztersatz.</div>
+    <div class="chat" id="chat"></div>
+    <div class="quick" id="quick"></div>
+    <div class="ask">
+      <input id="askIn" placeholder="Frag etwas …" onkeydown="if(event.key==='Enter')ask()">
+      <button class="btn" style="width:auto;padding:11px 16px" onclick="ask()">➤</button>
+    </div>
+  </section>
+</div>
+
+<!-- MEHR -->
+<div id="vMore" class="hide">
+  <section>
+    <div class="row"><h2>Mehr</h2></div>
+    <button class="menu-item" onclick="openSheet('test')"><span class="mic">🩺</span> PCOS / Endometriose Selbsttest</button>
+    <button class="menu-item" onclick="buildReport()"><span class="mic">📄</span> Arzt-Report (PDF / Druck)</button>
+    <button class="menu-item" onclick="openSheet('remind')"><span class="mic">🔔</span> Erinnerungen</button>
+    <button class="menu-item" onclick="openSheet('partner')"><span class="mic">💞</span> Partner-Modus / teilen</button>
+    <button class="menu-item" onclick="exportData()"><span class="mic">⬇︎</span> Daten sichern (Backup)</button>
+    <button class="menu-item" onclick="document.getElementById('imp').click()"><span class="mic">⬆︎</span> Backup laden</button>
+    <input type="file" id="imp" accept="application/json" class="hide" onchange="importData(event)">
+    <button class="menu-item" id="installBtn" onclick="doInstall()"><span class="mic">📲</span> App installieren</button>
+    <button class="menu-item" onclick="if(confirm('Wirklich ALLE Daten löschen?')){localStorage.removeItem('cyclo');location.reload();}"><span class="mic">🗑</span> Alle Daten löschen</button>
+  </section>
+  <section>
+    <div class="row"><h2>Einstellungen</h2></div>
+    <label class="fld">Zykluslänge (Standard, Tage)</label>
+    <input type="number" id="setCycle" min="20" max="45">
+    <label class="fld">Periodenlänge (Tage)</label>
+    <input type="number" id="setPeriod" min="2" max="10">
+    <button class="btn" style="margin-top:14px" onclick="saveSettings()">Speichern</button>
+  </section>
+  <section>
+    <div class="row"><h2>Verlauf</h2></div>
+    <div id="logPeriods"></div>
+    <div style="height:8px"></div>
+    <div id="logDays"></div>
+  </section>
+</div>
+
+<div class="sheet" id="sheet"><div class="sheet-inner" id="sheetInner"></div></div>
+
+<div class="tabs">
+  <button class="tab on" data-v="Cal" onclick="setTab('Cal')"><span class="ic">📅</span>Kalender</button>
+  <button class="tab" data-v="Ins" onclick="setTab('Ins')"><span class="ic">✨</span>Insights</button>
+  <button class="tab" data-v="Chat" onclick="setTab('Chat')"><span class="ic">💬</span>Assistant</button>
+  <button class="tab" data-v="More" onclick="setTab('More')"><span class="ic">☰</span>Mehr</button>
+</div>
+
+<script>
+const DAY=864e5;
+const SYM=["Krämpfe","Kopfweh","Müde","Übelkeit","Heißhunger","Blähung","Akne","Rückenweh","Brustspannen","Schwindel","Gut drauf"];
+const MOOD=["😄 Glücklich","😌 Ruhig","😐 Neutral","😣 Gereizt","😢 Traurig","😰 Ängstlich"];
+const FLOW=["Schmierblutung","Leicht","Mittel","Stark"];
+const MUCUS=["Trocken","Klebrig","Cremig","Eiweißartig"];
+
+let state={periods:[],days:{},cycleLen:28,periodLen:5,chat:[],remind:{period:true,ovu:true,pill:false,pillTime:"08:00",lastShown:""}};
+let viewMonth=new Date(); viewMonth.setDate(1);
+let deferredPrompt=null;
+
+const fmt=d=>{const z=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate());};
+const parse=s=>{const [y,m,dd]=s.split("-").map(Number);return new Date(y,m-1,dd);};
+const today=()=>{const d=new Date();d.setHours(0,0,0,0);return d;};
+const dde=(a,b)=>Math.round((b-a)/DAY);
+const deDate=d=>d.toLocaleDateString("de-CH",{day:"numeric",month:"short"});
+
+function load(){try{const r=localStorage.getItem("cyclo");if(r)state=Object.assign(state,JSON.parse(r));}catch(e){}
+  state.chat=state.chat||[];state.remind=state.remind||{period:true,ovu:true,pill:false,pillTime:"08:00",lastShown:""};render();initChat();checkReminders();}
+function save(){try{localStorage.setItem("cyclo",JSON.stringify(state));}catch(e){}}
+
+// ---- Analyse ----
+function sortedStarts(){return [...new Set(state.periods)].sort().map(parse);}
+function cycleLengths(){const s=sortedStarts();let a=[];for(let i=1;i<s.length;i++){const d=dde(s[i-1],s[i]);if(d>=15&&d<=60)a.push(d);}return a;}
+function avgCycle(){const c=cycleLengths();if(!c.length)return state.cycleLen;
+  let w=0,sum=0;c.slice(-6).forEach((v,i)=>{const wi=i+1;sum+=v*wi;w+=wi;});return Math.round(sum/w);}
+function variability(){const c=cycleLengths().slice(-6);if(c.length<2)return 0;
+  const m=c.reduce((a,b)=>a+b,0)/c.length;return Math.round(Math.sqrt(c.reduce((a,b)=>a+(b-m)**2,0)/c.length));}
+function avgPeriodLen(){let lens=[];sortedStarts().forEach(s=>{let n=0;for(let i=0;i<10;i++){const k=fmt(new Date(s.getTime()+i*DAY));
+  if(state.days[k]&&state.days[k].flow)n++;else if(i>0)break;}if(n)lens.push(n);});
+  if(!lens.length)return state.periodLen;return Math.round(lens.reduce((a,b)=>a+b,0)/lens.length);}
+function lastStart(){const s=sortedStarts();return s.length?s[s.length-1]:null;}
+function predict(){const ls=lastStart(),avg=avgCycle();if(!ls)return null;
+  const next=new Date(ls.getTime()+avg*DAY);const ovu=new Date(next.getTime()-14*DAY);
+  return {next,ovu,fertStart:new Date(ovu.getTime()-5*DAY),fertEnd:new Date(ovu.getTime()+1*DAY),avg,ls};}
+function ovuByTemp(){const ks=Object.keys(state.days).filter(k=>state.days[k].temp).sort();
+  for(let i=6;i<ks.length;i++){const prev=ks.slice(i-6,i).map(k=>state.days[k].temp);
+    const t=state.days[ks[i]].temp;const mean=prev.reduce((a,b)=>a+b,0)/prev.length;
+    if(t-mean>=0.25)return parse(ks[i-1]);}return null;}
+function phaseOf(){const p=predict();if(!p)return null;const t=today();const cd=dde(p.ls,t)+1;const perLen=avgPeriodLen();
+  if(cd>=1&&cd<=perLen)return {name:"Periode",cd};
+  if(dde(t,p.ovu)===0)return {name:"Eisprung",cd};
+  if(t>=p.fertStart&&t<=p.fertEnd)return {name:"Fruchtbar",cd};
+  if(cd>p.avg-7)return {name:"Lutealphase (PMS)",cd};
+  return {name:"Follikelphase",cd};}
+
+// ---- Render ----
+function render(){renderHero();renderCal();renderIns();renderLog();
+  document.getElementById("setCycle").value=state.cycleLen;
+  document.getElementById("setPeriod").value=state.periodLen;save();}
+
+function renderHero(){const p=predict();
+  if(!p){document.getElementById("phase").textContent="Willkommen";
+    document.getElementById("heroBig").textContent="Periode eintragen";
+    document.getElementById("heroSub").textContent="Trage deine letzte Periode ein, dann rechne ich los.";
+    ["rNext","rOvu","rAvg"].forEach(i=>document.getElementById(i).textContent="–");return;}
+  const ph=phaseOf();const t=today();
+  document.getElementById("phase").textContent=ph?ph.name+" · Tag "+ph.cd:"–";
+  const dn=dde(t,p.next);
+  if(dn<=0){document.getElementById("heroBig").textContent="überfällig";document.getElementById("heroSub").textContent=Math.abs(dn)+" Tage über der Vorhersage";}
+  else{document.getElementById("heroBig").textContent="in "+dn+" Tg";document.getElementById("heroSub").textContent="bis zur nächsten Periode";}
+  document.getElementById("rNext").textContent=deDate(p.next);
+  document.getElementById("rOvu").textContent=deDate(p.ovu);
+  document.getElementById("rAvg").textContent=p.avg+" Tg";}
+
+function dayClass(d){const p=predict();const k=fmt(d);let cls="";
+  if(state.days[k]&&state.days[k].flow)cls+=" period";
+  if(p){if(d>today()){const cd=dde(p.ls,d)%p.avg;if(cd>=0&&cd<avgPeriodLen()&&d>=new Date(p.next.getTime()-1*DAY))cls+=" pred";}
+    if(d>=p.fertStart&&d<=p.fertEnd&&!cls.includes("period"))cls+=" fertile";
+    if(dde(d,p.ovu)===0)cls+=" ovu";}return cls;}
+function renderCal(){document.getElementById("monthLbl").textContent=viewMonth.toLocaleDateString("de-CH",{month:"long",year:"numeric"});
+  const cal=document.getElementById("cal");cal.innerHTML="";
+  const first=new Date(viewMonth);const off=(first.getDay()+6)%7;
+  for(let i=0;i<off;i++){const e=document.createElement("div");e.className="day empty";cal.appendChild(e);}
+  const dim=new Date(viewMonth.getFullYear(),viewMonth.getMonth()+1,0).getDate();
+  for(let d=1;d<=dim;d++){const date=new Date(viewMonth.getFullYear(),viewMonth.getMonth(),d);
+    const el=document.createElement("div");el.className="day"+dayClass(date);
+    if(dde(date,today())===0)el.className+=" today";el.textContent=d;const k=fmt(date);
+    if(state.days[k]&&(state.days[k].sym?.length||state.days[k].mood||state.days[k].temp)){const dot=document.createElement("span");dot.className="dot";el.appendChild(dot);}
+    el.onclick=()=>openSheet("day",k);cal.appendChild(el);}}
+
+function renderIns(){const p=predict();const amp=document.getElementById("ampel");
+  if(!p){amp.innerHTML="<div class='note'>Trage mind. 1 Periode ein.</div>";document.getElementById("todayTip").textContent="";
+    ["iNext","iFert","iOvu","iOvuT","sAvg","sVar","sPer","sCnt"].forEach(i=>document.getElementById(i).textContent="–");
+    document.getElementById("pms").innerHTML="<small style='color:var(--ink2)'>Noch zu wenig Daten.</small>";return;}
+  const ph=phaseOf();let cls="ok",txt="Niedrige Fruchtbarkeit",d="var(--ok)";
+  if(ph&&ph.name==="Periode"){cls="ok";txt="Periode";}
+  else if(ph&&(ph.name==="Fruchtbar")){cls="danger";txt="Fruchtbar – hohes Risiko";d="var(--period)";}
+  else if(ph&&ph.name==="Eisprung"){cls="danger";txt="Eisprung – höchstes Risiko";d="var(--period)";}
+  else if(today()>=new Date(p.fertStart.getTime()-2*DAY)&&today()<p.fertStart){cls="warn";txt="Fruchtbar nähert sich";d="var(--warn)";}
+  amp.innerHTML=`<div class="ampel ${cls}"><span class="dotbig" style="background:${d}"></span><div><div class="big">${txt}</div><div style="font-size:12px;opacity:.8">${ph?ph.name+" · Zyklustag "+ph.cd:""}</div></div></div>`;
+  const tips={"Periode":"Wärme & Ruhe helfen bei Krämpfen. Eisen-reich essen.","Follikelphase":"Energie steigt – gute Phase für Sport & Lernen.","Fruchtbar":"Höchste Fruchtbarkeit. Zum Verhüten unbedingt schützen.","Eisprung":"Eisprung heute. Bei Kinderwunsch idealer Tag.","Lutealphase (PMS)":"PMS möglich: Heißhunger, Stimmung. Mehr Schlaf, weniger Zucker."};
+  document.getElementById("todayTip").textContent=ph?(tips[ph.name]||""):"";
+  document.getElementById("iNext").textContent=deDate(p.next);
+  document.getElementById("iFert").textContent=deDate(p.fertStart)+" – "+deDate(p.fertEnd);
+  document.getElementById("iOvu").textContent=deDate(p.ovu);
+  const ot=ovuByTemp();document.getElementById("iOvuT").textContent=ot?deDate(ot):"– (mehr Temp.)";
+  document.getElementById("sAvg").textContent=avgCycle()+" Tage";
+  document.getElementById("sVar").textContent="± "+variability()+" Tage";
+  document.getElementById("sPer").textContent=avgPeriodLen()+" Tage";
+  document.getElementById("sCnt").textContent=Math.max(0,sortedStarts().length-1);
+  renderPMS();}
+
+function renderPMS(){const p=predict();const box=document.getElementById("pms");if(!p){box.innerHTML="";return;}
+  // Symptome in Lutealphase zählen
+  const count={};let tot=0;
+  Object.keys(state.days).forEach(k=>{const d=state.days[k];if(!d.sym)return;
+    const cd=((dde(p.ls,parse(k)))%p.avg+p.avg)%p.avg;
+    if(cd>p.avg-8){tot++;d.sym.forEach(s=>count[s]=(count[s]||0)+1);}});
+  const arr=Object.entries(count).sort((a,b)=>b[1]-a[1]).slice(0,4);
+  if(!arr.length){box.innerHTML="<small style='color:var(--ink2)'>Trage Symptome ein – ich erkenne Muster in deiner PMS-Phase.</small>";return;}
+  box.innerHTML="<div class='note'>Häufig in deiner PMS-Phase (Tage vor der Periode):<br><b>"+arr.map(a=>a[0]).join(", ")+"</b></div>";}
+
+function renderLog(){const lp=document.getElementById("logPeriods");lp.innerHTML="<b style='font-size:13px'>Perioden</b>";
+  sortedStarts().reverse().forEach(d=>{const k=fmt(d);const row=document.createElement("div");row.className="logitem";
+    row.innerHTML="<span>"+d.toLocaleDateString("de-CH")+"</span>";const b=document.createElement("button");b.className="x";b.textContent="×";
+    b.onclick=()=>{state.periods=state.periods.filter(x=>x!==k);render();};row.appendChild(b);lp.appendChild(row);});
+  if(!state.periods.length)lp.innerHTML+="<div><small style='color:var(--ink2)'>Noch keine.</small></div>";
+  const ld=document.getElementById("logDays");ld.innerHTML="<b style='font-size:13px'>Einträge</b>";let any=false;
+  Object.keys(state.days).sort().reverse().slice(0,40).forEach(k=>{const d=state.days[k];const parts=[];
+    if(d.flow)parts.push("🩸"+d.flow);if(d.temp)parts.push("🌡"+d.temp+"°");if(d.mucus)parts.push("💧"+d.mucus);
+    if(d.lh)parts.push("LH+");if(d.pill)parts.push("💊");if(d.water)parts.push(d.water+"💧");
+    if(d.sex)parts.push(d.sex==="protected"?"❤️geschützt":"❤️ungeschützt");if(d.mood)parts.push(d.mood);if(d.sym?.length)parts.push(d.sym.join(", "));
+    if(!parts.length)return;any=true;const row=document.createElement("div");row.className="logitem";
+    row.innerHTML="<span><b>"+parse(k).toLocaleDateString("de-CH")+"</b><br><small>"+parts.join(" · ")+"</small></span>";ld.appendChild(row);});
+  if(!any)ld.innerHTML+="<div><small style='color:var(--ink2)'>Noch keine.</small></div>";}
+
+// ---- Sheets ----
+const sheet=document.getElementById("sheet"),si=document.getElementById("sheetInner");
+function closeSheet(){sheet.classList.remove("open");}
+sheet.onclick=e=>{if(e.target===sheet)closeSheet();};
+
+function openSheet(type,key){
+  if(type==="period"){si.innerHTML=`<h3>Periode eintragen</h3><div class="sub">Erster Tag der Blutung.</div>
+    <label class="fld">Startdatum</label><input type="date" id="pDate" value="${fmt(today())}">
+    <button class="btn" style="margin-top:18px" onclick="addPeriod()">Speichern</button>`;}
+  else if(type==="day"){const k=key||fmt(today());const d=state.days[k]||{};
+    si.innerHTML=`<h3>${parse(k).toLocaleDateString("de-CH",{weekday:"long",day:"numeric",month:"long"})}</h3><div class="sub">Tageseintrag</div>
+      <label class="fld">Blutung</label><div class="chips" id="cFlow"></div>
+      <label class="fld">Basaltemperatur (°C, morgens vor dem Aufstehen)</label><input type="number" step="0.01" id="dTemp" placeholder="36.55" value="${d.temp||""}">
+      <label class="fld">Zervixschleim</label><div class="chips" id="cMucus"></div>
+      <label class="fld">Ovulationstest (LH)</label><div class="chips" id="cLh"></div>
+      <label class="fld">Sex</label><div class="chips" id="cSex"></div>
+      <label class="fld">Pille genommen</label><div class="chips" id="cPill"></div>
+      <label class="fld">Wasser (Gläser)</label><input type="number" id="dWater" min="0" max="20" value="${d.water||""}">
+      <label class="fld">Stimmung</label><div class="chips" id="cMood"></div>
+      <label class="fld">Symptome</label><div class="chips" id="cSym"></div>
+      <button class="btn" style="margin-top:18px" onclick="saveDay('${k}')">Speichern</button>
+      <button class="btn line" style="margin-top:8px" onclick="delDay('${k}')">Eintrag löschen</button>`;
+    chipSet("cFlow",FLOW,d.flow?[d.flow]:[],1);chipSet("cMucus",MUCUS,d.mucus?[d.mucus]:[],1);
+    chipSet("cLh",["Positiv"],d.lh?["Positiv"]:[],1);chipSet("cSex",["Geschützt","Ungeschützt"],d.sex?[d.sex==="protected"?"Geschützt":"Ungeschützt"]:[],1);
+    chipSet("cPill",["Ja"],d.pill?["Ja"]:[],1);chipSet("cMood",MOOD,d.mood?[d.mood]:[],1);chipSet("cSym",SYM,d.sym||[],0);}
+  else if(type==="test"){openTest();}
+  else if(type==="remind"){openRemind();}
+  else if(type==="partner"){openPartner();}
+  sheet.classList.add("open");
+}
+function chipSet(id,opts,sel,single){const c=document.getElementById(id);c.innerHTML="";
+  opts.forEach(o=>{const b=document.createElement("button");b.className="chip"+(sel.includes(o)?" on":"");b.textContent=o;
+    b.onclick=()=>{if(single){[...c.children].forEach(x=>x.classList.remove("on"));const was=sel.includes(o);sel.length=0;if(!was){b.classList.add("on");sel.push(o);}}
+      else b.classList.toggle("on");};c.appendChild(b);});}
+function readChips(id){return [...document.getElementById(id).children].filter(x=>x.classList.contains("on")).map(x=>x.textContent);}
+
+function addPeriod(){const v=document.getElementById("pDate").value;if(!v)return;if(!state.periods.includes(v))state.periods.push(v);
+  const s=parse(v);for(let i=0;i<state.periodLen;i++){const k=fmt(new Date(s.getTime()+i*DAY));state.days[k]=state.days[k]||{};
+    if(!state.days[k].flow)state.days[k].flow=i===0?"Mittel":(i<2?"Stark":"Leicht");}closeSheet();render();}
+function saveDay(k){const d=state.days[k]||{};d.flow=readChips("cFlow")[0]||null;
+  const t=parseFloat(document.getElementById("dTemp").value);d.temp=isNaN(t)?null:t;
+  d.mucus=readChips("cMucus")[0]||null;d.lh=readChips("cLh").length?true:false;
+  const sx=readChips("cSex")[0];d.sex=sx?(sx==="Geschützt"?"protected":"unprotected"):null;
+  d.pill=readChips("cPill").length?true:false;const w=parseInt(document.getElementById("dWater").value);d.water=isNaN(w)?null:w;
+  d.mood=readChips("cMood")[0]||null;d.sym=readChips("cSym");
+  Object.keys(d).forEach(x=>{if(d[x]==null||d[x]===false||(Array.isArray(d[x])&&!d[x].length))delete d[x];});
+  if(Object.keys(d).length)state.days[k]=d;else delete state.days[k];closeSheet();render();}
+function delDay(k){delete state.days[k];closeSheet();render();}
+function saveSettings(){state.cycleLen=parseInt(document.getElementById("setCycle").value)||28;
+  state.periodLen=parseInt(document.getElementById("setPeriod").value)||5;render();alert("Gespeichert.");}
+
+// ---- Selbsttest ----
+function openTest(){si.innerHTML=`<h3>Selbsttest</h3><div class="sub">Orientierung, keine Diagnose. Bei Verdacht zum Frauenarzt.</div>
+  <div id="testBody"></div>`;const qs=[
+    ["Zyklus oft länger als 35 Tage oder sehr unregelmäßig?","pcos"],
+    ["Vermehrt Akne oder fettige Haut?","pcos"],
+    ["Vermehrt Haarwuchs (Gesicht, Bauch) oder Haarausfall?","pcos"],
+    ["Schwierig, Gewicht zu halten / Gewichtszunahme?","pcos"],
+    ["Sehr starke, krampfartige Regelschmerzen?","endo"],
+    ["Schmerzen beim Sex oder Stuhlgang?","endo"],
+    ["Schmerzen auch außerhalb der Periode im Becken?","endo"],
+    ["Sehr starke oder sehr lange Blutungen?","endo"]];
+  let html="";qs.forEach((q,i)=>{html+=`<label class="fld" style="text-transform:none;font-size:13px">${q[0]}</label>
+    <div class="chips"><button class="chip" onclick="tAns(${i},1,this)">Ja</button><button class="chip" onclick="tAns(${i},0,this)">Nein</button></div>`;});
+  html+=`<button class="btn" style="margin-top:18px" onclick="evalTest()">Auswerten</button><div id="testRes" style="margin-top:14px"></div>`;
+  document.getElementById("testBody").innerHTML=html;window._t=qs.map(()=>null);window._tq=qs;}
+function tAns(i,v,el){window._t[i]=v;const p=el.parentElement;[...p.children].forEach(c=>c.classList.remove("on"));el.classList.add("on");}
+function evalTest(){if(window._t.includes(null)){alert("Bitte alle Fragen beantworten.");return;}
+  let pcos=0,endo=0,pc=0,ec=0;window._tq.forEach((q,i)=>{if(q[1]==="pcos"){pc++;pcos+=window._t[i];}else{ec++;endo+=window._t[i];}});
+  const f=(n,t)=>n/t>=0.6?"erhöht":n/t>=0.3?"leicht erhöht":"niedrig";
+  document.getElementById("testRes").innerHTML=`<div class="note">PCOS-Hinweise: <b>${f(pcos,pc)}</b> (${pcos}/${pc})<br>Endometriose-Hinweise: <b>${f(endo,ec)}</b> (${endo}/${ec})</div>
+    <div class="warn">Das ersetzt keine ärztliche Abklärung. Bei „erhöht" oder Beschwerden: Termin beim Frauenarzt.</div>`;}
+
+// ---- Report ----
+function buildReport(){const p=predict();const w=window.open("","_blank");
+  let rows=Object.keys(state.days).sort().slice(-90).map(k=>{const d=state.days[k];const parts=[];
+    if(d.flow)parts.push("Blutung:"+d.flow);if(d.temp)parts.push("Temp:"+d.temp);if(d.mucus)parts.push("Schleim:"+d.mucus);
+    if(d.lh)parts.push("LH+");if(d.mood)parts.push(d.mood);if(d.sym?.length)parts.push(d.sym.join(","));
+    return parts.length?`<tr><td>${parse(k).toLocaleDateString("de-CH")}</td><td>${parts.join(" · ")}</td></tr>`:"";}).join("");
+  const html=`<html><head><meta charset="utf-8"><title>Cyclo Report</title>
+    <style>body{font-family:sans-serif;color:#2c1b2b;padding:24px;max-width:700px;margin:auto}h1{color:#d2628a}
+    table{width:100%;border-collapse:collapse;font-size:13px}td{border-bottom:1px solid #eee;padding:6px}
+    .box{background:#f7dde6;border-radius:10px;padding:14px;margin:10px 0}</style></head><body>
+    <h1>Cyclo – Zyklus-Report</h1><p>Erstellt: ${new Date().toLocaleDateString("de-CH")}</p>
+    <div class="box"><b>Übersicht (letzte 6 Monate)</b><br>
+    Ø Zykluslänge: ${avgCycle()} Tage (Schwankung ± ${variability()})<br>
+    Ø Periodenlänge: ${avgPeriodLen()} Tage<br>Erfasste Zyklen: ${Math.max(0,sortedStarts().length-1)}<br>
+    ${p?"Letzte Periode: "+p.ls.toLocaleDateString("de-CH")+"<br>Nächste (Prognose): "+p.next.toLocaleDateString("de-CH"):""}</div>
+    <h3>Tagesverlauf</h3><table>${rows||"<tr><td>Keine Einträge</td></tr>"}</table>
+    <p style="font-size:11px;color:#888;margin-top:20px">Selbsterfasste Daten, keine medizinische Diagnose.</p>
+    <button onclick="print()" style="margin-top:16px;padding:12px 20px;background:#d2628a;color:#fff;border:none;border-radius:10px;font-size:15px">Als PDF speichern / drucken</button>
+    </body></html>`;w.document.write(html);w.document.close();}
+
+// ---- Erinnerungen ----
+function openRemind(){const r=state.remind;si.innerHTML=`<h3>Erinnerungen</h3>
+  <div class="sub">Benachrichtigungen erscheinen, wenn die App im Hintergrund/geöffnet ist. (iOS: nur als installierte App, eingeschränkt.)</div>
+  <div class="row" style="margin-top:14px"><span>Periode naht (1 Tag vorher)</span><div class="toggle ${r.period?'on':''}" onclick="tg('period',this)"></div></div>
+  <div class="row"><span>Eisprung / fruchtbar</span><div class="toggle ${r.ovu?'on':''}" onclick="tg('ovu',this)"></div></div>
+  <div class="row"><span>Pillen-Erinnerung</span><div class="toggle ${r.pill?'on':''}" onclick="tg('pill',this)"></div></div>
+  <label class="fld">Pillen-Uhrzeit</label><input type="time" id="pillTime" value="${r.pillTime}">
+  <button class="btn" style="margin-top:18px" onclick="saveRemind()">Aktivieren</button>`;}
+function tg(key,el){el.classList.toggle("on");state.remind[key]=el.classList.contains("on");}
+async function saveRemind(){state.remind.pillTime=document.getElementById("pillTime").value;
+  if(state.remind.period||state.remind.ovu||state.remind.pill){
+    if("Notification" in window){const perm=await Notification.requestPermission();
+      if(perm!=="granted"){alert("Benachrichtigungen wurden nicht erlaubt. In den Browser-Einstellungen aktivieren.");}}}
+  save();closeSheet();checkReminders();alert("Erinnerungen gespeichert.");}
+function notify(title,body){if("Notification" in window && Notification.permission==="granted"){
+  if(navigator.serviceWorker&&navigator.serviceWorker.ready)navigator.serviceWorker.ready.then(reg=>reg.showNotification(title,{body,icon:"data:image/png;base64,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"}));
+  else new Notification(title,{body});}}
+function checkReminders(){const p=predict();if(!p)return;const t=fmt(today());const r=state.remind;
+  if(r.lastShown===t)return;const dn=dde(today(),p.next);
+  if(r.period&&dn===1){notify("Cyclo","Deine Periode startet voraussichtlich morgen 🩸");r.lastShown=t;}
+  else if(r.ovu&&dde(today(),p.ovu)===0){notify("Cyclo","Eisprung heute – fruchtbares Fenster ✨");r.lastShown=t;}
+  save();
+  if(r.pill){const [h,m]=r.pillTime.split(":").map(Number);const now=new Date();
+    const due=new Date();due.setHours(h,m,0,0);const ms=due-now;if(ms>0&&ms<DAY)setTimeout(()=>notify("Cyclo","Zeit für die Pille 💊"),ms);}}
+
+// ---- Partner ----
+function openPartner(){const p=predict();const ph=phaseOf();
+  let txt="Noch keine Daten.";if(p&&ph){const dn=dde(today(),p.next);
+    txt=`Aktuelle Phase: ${ph.name} (Zyklustag ${ph.cd}). Nächste Periode in ${dn>0?dn+" Tagen":"überfällig"}.`;}
+  si.innerHTML=`<h3>Partner-Modus</h3><div class="sub">Teile nur die aktuelle Phase – keine Details.</div>
+    <div class="note" style="margin:14px 0">${txt}</div>
+    <button class="btn" onclick="sharePartner(\`${txt}\`)">Phase teilen</button>
+    <div class="warn">Tipp: In der Lutealphase (PMS) auf Stimmungstiefs Rücksicht nehmen. In der fruchtbaren Phase: schützen, wenn ihr verhütet.</div>`;}
+function sharePartner(txt){if(navigator.share)navigator.share({title:"Cyclo",text:txt}).catch(()=>{});
+  else{navigator.clipboard?.writeText(txt);alert("In Zwischenablage kopiert:\n\n"+txt);}}
+
+// ---- Backup ----
+function exportData(){const blob=new Blob([JSON.stringify(state)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="cyclo-backup-"+fmt(today())+".json";a.click();}
+function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{state=Object.assign(state,JSON.parse(r.result));save();render();alert("Backup geladen.");}catch(x){alert("Datei ungültig.");}};r.readAsText(f);}
+
+// ---- Assistant (offline) ----
+const KB=[
+  {k:["verspät","überfällig","zu spät","nicht gekommen","ausgeblieb"],a:"Eine Periode kann sich durch Stress, Reisen, Sport, Gewicht, Schlaf oder Krankheit verschieben – 1–2 Wochen Schwankung sind nicht selten. Wenn die Periode ausbleibt und ungeschützter Sex stattfand, mach einen Schwangerschaftstest. Bleibt sie >35–40 Tage regelmäßig aus, sprich mit dem Frauenarzt."},
+  {k:["krampf","schmerz","weh","regelschmerz"],a:"Gegen Regelschmerzen helfen: Wärme (Wärmflasche), leichte Bewegung, Magnesium, ausreichend Trinken, ggf. Ibuprofen. Sehr starke Schmerzen, die den Alltag blockieren, oder Schmerzen außerhalb der Periode können auf Endometriose hindeuten → abklären lassen."},
+  {k:["eisprung","ovulation","fruchtbar"],a:"Der Eisprung ist meist ~14 Tage VOR der nächsten Periode (nicht in der Mitte!). Zeichen: klarer, dehnbarer Schleim (eiweißartig), leichter Temperaturanstieg danach (~0,3°C), evtl. Ziehen im Unterbauch, positiver LH-Test. Trag Temperatur + Schleim ein, dann markiere ich das Fenster genauer."},
+  {k:["temperatur","basal","messen"],a:"Basaltemperatur jeden Morgen DIREKT nach dem Aufwachen messen, vor dem Aufstehen, immer zur gleichen Zeit, gleiches Thermometer. Nach dem Eisprung steigt sie ~0,3°C und bleibt erhöht. Bleibt sie >18 Tage hoch → evtl. Schwangerschaft."},
+  {k:["schleim","zervix","ausfluss"],a:"Zervixschleim verändert sich im Zyklus: nach der Periode trocken/wenig → cremig → um den Eisprung klar, glasig, dehnbar (wie Eiweiß) = fruchtbar. Danach wieder dicker. Brauner Ausfluss am Anfang/Ende der Periode ist meist normal (altes Blut). Riecht es streng, juckt oder ist grünlich → abklären."},
+  {k:["pms","stimmung","gereizt","reizbar","heißhunger","vor der periode"],a:"PMS tritt in der Lutealphase (5–10 Tage vor der Periode) auf: Stimmungsschwankungen, Heißhunger, Brustspannen, Müdigkeit. Hilft: Schlaf, weniger Zucker/Salz/Koffein, Bewegung, Magnesium. Sehr starke psychische Symptome = PMDS, dann ärztlich abklären."},
+  {k:["unregelmäßig","schwank"],a:"Ein leicht unregelmäßiger Zyklus ist normal, besonders in jungen Jahren oder bei Stress. Stark schwankende Zyklen (>8 Tage Unterschied) oder >35 Tage Länge können auf PCOS o.ä. hindeuten. Trag mehrere Zyklen ein, dann zeige ich dir die Schwankung."},
+  {k:["verhüt","sicher","kondom","schwanger werden vermeiden","nicht schwanger"],a:"WICHTIG: Diese App ist KEINE sichere Verhütung. Kalender-/Temperaturmethoden haben hohe Versagensraten bei unregelmäßigen Zyklen. Zum sicheren Verhüten: Pille, Spirale, Implantat oder Kondom – am besten mit dem Frauenarzt besprechen. Die App zeigt nur Wahrscheinlichkeiten."},
+  {k:["schwanger","test"],a:"Ein Schwangerschaftstest ist am zuverlässigsten ab dem Tag der erwarteten Periode (Morgenurin). Bei ausgebliebener Periode + ungeschütztem Sex: testen. Bei Unsicherheit Bluttest beim Arzt."},
+  {k:["blut","stark","viel"],a:"Sehr starke Blutung (Binde/Tampon stündlich durch, große Klumpen, >7 Tage) ist nicht normal → ärztlich abklären. Eisenreiche Ernährung hilft bei Müdigkeit durch Blutverlust."},
+  {k:["pille vergessen"],a:"Pille vergessen: Hängt vom Präparat und Zeitpunkt ab. Faustregel Kombipille: <12h zu spät → sofort nachnehmen, weiter wie gewohnt, meist noch sicher. >12h → Beipackzettel lesen, zusätzlich Kondom. Im Zweifel Arzt/Apotheke fragen."},
+  {k:["sport","training","abnehmen","gewicht"],a:"Im Zyklus schwankt die Leistung: Follikelphase (nach Periode) = mehr Energie, gut für intensives Training. Lutealphase = ruhiger, mehr Regeneration. Trag deine Phase ein, dann sieh, wann du dich am stärksten fühlst."}
+];
+function botReply(q){q=q.toLowerCase();for(const e of KB){if(e.k.some(w=>q.includes(w)))return e.a;}
+  return "Dazu hab ich keine vorbereitete Info. Frag z.B. nach: Eisprung erkennen, Regelschmerzen, PMS, Periode verspätet, Verhütung, Temperatur messen. Bei medizinischen Sorgen bitte zum Frauenarzt.";}
+function initChat(){const c=document.getElementById("chat");c.innerHTML="";
+  if(!state.chat.length)state.chat=[{r:"bot",t:"Hi 👋 Ich bin dein Cyclo-Assistant. Frag mich alles zu Zyklus, Eisprung, Symptomen oder Verhütung."}];
+  state.chat.forEach(m=>addMsg(m.r,m.t,false));
+  const q=document.getElementById("quick");q.innerHTML="";
+  ["Wie erkenne ich den Eisprung?","Was hilft gegen Krämpfe?","Periode verspätet?","Ist das sichere Verhütung?"].forEach(t=>{
+    const b=document.createElement("button");b.textContent=t;b.onclick=()=>{document.getElementById("askIn").value=t;ask();};q.appendChild(b);});}
+function addMsg(r,t,push=true){const c=document.getElementById("chat");const d=document.createElement("div");d.className="msg "+r;d.textContent=t;c.appendChild(d);
+  c.scrollTop=c.scrollHeight;if(push){state.chat.push({r,t});if(state.chat.length>40)state.chat=state.chat.slice(-40);save();}}
+function ask(){const i=document.getElementById("askIn");const q=i.value.trim();if(!q)return;i.value="";addMsg("me",q);
+  setTimeout(()=>addMsg("bot",botReply(q)),250);}
+
+// ---- Tabs / Install / PWA ----
+function moveMonth(n){viewMonth.setMonth(viewMonth.getMonth()+n);renderCal();}
+function setTab(v){["Cal","Ins","Chat","More"].forEach(x=>document.getElementById("v"+x).classList.toggle("hide",x!==v));
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.v===v));
+  document.getElementById("hero").style.display=(v==="More")?"none":"block";window.scrollTo(0,0);
+  if(v==="Chat")initChat();}
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;});
+function doInstall(){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null;}
+  else alert("So installierst du Cyclo:\n\niPhone (Safari): Teilen-Symbol unten -> Zum Home-Bildschirm.\n\nAndroid (Chrome): Menue (drei Punkte) -> App installieren / Zum Startbildschirm hinzufuegen.");}
+
+/* offline: alles inline, kein Service Worker nötig */
+load();
+</script>
+</body>
+</html>
