@@ -103,8 +103,11 @@ test("Einstellungen zeigen Integrationen ehrlich als nicht verbunden/konfigurier
 
 test("Globale Suche per Tastenkürzel", async ({ page }) => {
   await login(page);
-  await page.keyboard.press("Control+k");
-  await expect(page.getByLabel("Suchbegriff")).toBeVisible();
+  // Tastenkürzel greift erst nach der Hydration → wiederholen, bis die Palette offen ist
+  await expect(async () => {
+    await page.keyboard.press("Control+k");
+    await expect(page.getByLabel("Suchbegriff")).toBeVisible({ timeout: 1000 });
+  }).toPass({ timeout: 15_000 });
   await page.getByLabel("Suchbegriff").fill("Kalender");
   await page.keyboard.press("Enter");
   // Erster Eintrag: „Assistent fragen“ → Chat startet mit der Frage
