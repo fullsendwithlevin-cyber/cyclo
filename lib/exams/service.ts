@@ -18,7 +18,7 @@ export const examInputSchema = z.object({
 });
 export type ExamInput = z.infer<typeof examInputSchema>;
 
-const EXAM_PATTERN = /\b(prüfung|pruefung|klausur|schularbeit|test|exam|lernkontrolle|lk|abschlussprüfung|matura|quiz|kolloquium)\b/i;
+const EXAM_PATTERN = /(?<!\p{L})(prüfung|pruefung|klausur|schularbeit|test|exam|lernkontrolle|lk|abschlussprüfung|matura|quiz|kolloquium)(?!\p{L})/iu;
 
 /** Heuristik für Einträge aus Schulplattformen / Kalendern. */
 export const looksLikeExam = (text: string) => EXAM_PATTERN.test(text);

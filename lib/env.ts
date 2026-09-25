@@ -7,7 +7,7 @@ const schema = z.object({
   TOKEN_ENCRYPTION_KEY: z.string().min(1),
   ALLOW_DEV_LOGIN: z.enum(["true", "false"]).default("false"),
 
-  AI_PROVIDER: z.enum(["anthropic", "openai"]).default("anthropic"),
+  AI_PROVIDER: z.enum(["anthropic", "openai", "scripted"]).default("anthropic"),
   ANTHROPIC_API_KEY: z.string().optional(),
   ANTHROPIC_MODEL: z.string().default("claude-opus-5"),
   ANTHROPIC_EFFORT: z.enum(["low", "medium", "high", "xhigh", "max"]).default("high"),
@@ -49,6 +49,8 @@ export function env(): Env {
     const issues = parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ");
     throw new Error(`Ungültige Umgebungsvariablen: ${issues}`);
   }
+  if (parsed.data.AI_PROVIDER === "scripted" && parsed.data.NODE_ENV === "production")
+    throw new Error("AI_PROVIDER=scripted ist nur für Tests erlaubt.");
   cached = parsed.data;
   return cached;
 }

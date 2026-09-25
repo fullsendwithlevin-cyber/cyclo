@@ -45,7 +45,7 @@ export function guessSubject(e: Pick<IcsEvent, "summary" | "categories">): strin
   if (e.categories[0]) return e.categories[0];
   const m = e.summary.match(/^([^:–\-|]+)[:–\-|]/);
   if (m && m[1].trim().length <= 40) return m[1].trim();
-  const cleaned = e.summary.replace(/\b(prüfung|pruefung|klausur|test|exam|schularbeit|lernkontrolle|lk)\b/gi, "").trim();
+  const cleaned = e.summary.replace(/(?<!\p{L})(prüfung|pruefung|klausur|test|exam|schularbeit|lernkontrolle|lk)(?!\p{L})/giu, "").trim();
   return cleaned.split(/\s+/).slice(0, 3).join(" ") || "Unbekanntes Fach";
 }
 

@@ -1,4 +1,3 @@
-import { MICROSOFT_SCOPES } from "@/lib/integrations/catalog";
 import { oauthFetch } from "@/lib/integrations/http";
 import { requireScopes } from "@/lib/integrations/vault";
 import { htmlToText } from "@/lib/integrations/google/gmail";

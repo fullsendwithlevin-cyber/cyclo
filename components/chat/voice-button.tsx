@@ -1,19 +1,18 @@
 "use client";
 
 import { Mic, Square } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useClientValue } from "@/lib/client/hooks";
 import { apiFetch } from "@/lib/client/api";
 import { detectSttMode, startBrowserRecognition, startRecording, type SttMode, type VoiceSession } from "@/lib/voice/client";
 import { cn } from "@/lib/utils";
 
 export function VoiceButton({ serverStt, onText, onFinal }: { serverStt: boolean; onText: (t: string) => void; onFinal: (t: string) => void }) {
-  const [mode, setMode] = useState<SttMode>("none");
+  const mode = useClientValue<SttMode>(() => detectSttMode(serverStt), "none");
   const [active, setActive] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const session = useRef<VoiceSession | { stop(): Promise<Blob> } | null>(null);
-
-  useEffect(() => setMode(detectSttMode(serverStt)), [serverStt]);
 
   if (mode === "none")
     return (

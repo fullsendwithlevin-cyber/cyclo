@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { apiFetch, useApi } from "@/lib/client/api";
+import { useIsDark } from "@/lib/client/hooks";
 import { cn } from "@/lib/utils";
 import { CommandPalette } from "./command-palette";
 import { MOBILE_NAV, NAV } from "./nav";
@@ -21,15 +22,13 @@ function isActive(pathname: string, href: string) {
 }
 
 function ThemeToggle() {
-  const [dark, setDark] = useState<boolean | null>(null);
-  useEffect(() => setDark(document.documentElement.classList.contains("dark")), []);
+  const dark = useIsDark();
   const toggle = () => {
     const next = !dark;
     document.documentElement.classList.toggle("dark", next);
     try {
       localStorage.setItem("theme", next ? "dark" : "light");
     } catch {}
-    setDark(next);
   };
   return (
     <button onClick={toggle} className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground" aria-label="Farbschema wechseln">
@@ -144,7 +143,7 @@ export function AppShell({ user, children }: { user: ShellUser; children: React.
         </div>
       </nav>
 
-      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
+      {paletteOpen && <CommandPalette onClose={() => setPaletteOpen(false)} />}
     </div>
   );
 }

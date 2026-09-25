@@ -4,7 +4,7 @@ import { env } from "@/lib/env";
 
 /** Lokaler Dateispeicher (austauschbar gegen S3 o. Ä. mit gleichem Interface). */
 function root() {
-  return path.resolve(env().UPLOAD_DIR);
+  return path.resolve(/* turbopackIgnore: true */ process.cwd(), env().UPLOAD_DIR);
 }
 
 function safePath(userId: string, key: string) {

@@ -364,7 +364,9 @@ function mergeParts(parts: MessagePart[]): MessagePart[] {
     if (p.type === "sources") {
       for (const s of p.sources) {
         const key = `${s.kind}:${s.id}:${s.location ?? ""}`;
-        if (!seen.has(key)) (seen.add(key), sources.push(s));
+        if (seen.has(key)) continue;
+        seen.add(key);
+        sources.push(s);
       }
     } else out.push(p);
   }

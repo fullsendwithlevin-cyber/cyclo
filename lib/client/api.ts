@@ -21,6 +21,8 @@ export class ApiError extends Error implements ErrorInfo {
 
 async function handle<T>(res: Response): Promise<T> {
   if (res.status === 401 && typeof window !== "undefined" && !location.pathname.startsWith("/login")) {
+    // Vollständiger Reload beabsichtigt: verwirft Client-Zustand der abgelaufenen Sitzung
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     location.href = `/login?returnTo=${encodeURIComponent(location.pathname)}`;
   }
   const json = await res.json().catch(() => ({}));

@@ -29,8 +29,14 @@ export function scoreEvent(type: string, payload: Record<string, unknown>, now =
       let s = 0.7;
       reasons.push("Neue Prüfung");
       if (d < 0) return { score: 0.1, reasons: ["Prüfung liegt in der Vergangenheit"] };
-      if (d <= 14) (s += 0.2), reasons.push("in den nächsten 14 Tagen");
-      if (d <= 3) (s += 0.1), reasons.push("in weniger als 3 Tagen");
+      if (d <= 14) {
+        s += 0.2;
+        reasons.push("in den nächsten 14 Tagen");
+      }
+      if (d <= 3) {
+        s += 0.1;
+        reasons.push("in weniger als 3 Tagen");
+      }
       return { score: clamp(s), reasons };
     }
     case "exam.changed":

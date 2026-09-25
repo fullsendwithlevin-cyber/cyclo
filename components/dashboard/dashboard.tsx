@@ -24,6 +24,7 @@ import { RunSteps, StepIcon } from "@/components/agent/run-steps";
 import { apiFetch, useApi } from "@/lib/client/api";
 import { fmtDate, fmtDateTime, fmtLongDate, fmtTime, relativeDays } from "@/lib/client/format";
 import { useToast } from "@/components/ui/toast";
+import { useNow } from "@/lib/client/hooks";
 import { Section } from "./section";
 import { ToolLabel } from "@/components/agent/tool-label";
 import type { ErrorInfo } from "@/lib/errors";
@@ -54,6 +55,7 @@ export function Dashboard() {
   const router = useRouter();
   const toast = useToast();
   const [ask, setAsk] = useState("");
+  const now = useNow();
 
   const completeTask = async (id: string) => {
     try {
@@ -178,7 +180,7 @@ export function Dashboard() {
                     <button onClick={() => completeTask(t.id)} className="h-4 w-4 shrink-0 rounded border hover:border-primary" aria-label={`„${t.title}“ erledigen`} />
                     <span className="min-w-0 flex-1 truncate text-sm">{t.title}</span>
                     {t.project && <span className="hidden truncate text-xs text-muted-foreground sm:inline">{t.project.name}</span>}
-                    {t.dueDate && <span className={`text-xs ${new Date(t.dueDate) < new Date() ? "text-danger" : "text-muted-foreground"}`}>{relativeDays(t.dueDate)}</span>}
+                    {t.dueDate && <span className={`text-xs ${new Date(t.dueDate).getTime() < now ? "text-danger" : "text-muted-foreground"}`}>{relativeDays(t.dueDate)}</span>}
                     <Badge tone={PRIO_TONE[t.priority]}>{PRIO_LABEL[t.priority]}</Badge>
                   </li>
                 ))}
@@ -199,7 +201,7 @@ export function Dashboard() {
                   <Link href={`/exams/${e.id}`} className="block rounded-lg p-2 hover:bg-muted">
                     <div className="flex items-center justify-between gap-2">
                       <p className="truncate text-sm font-medium">{e.subject}</p>
-                      <Badge tone={(new Date(e.start).getTime() - Date.now()) / 864e5 < 4 ? "danger" : "outline"}>{relativeDays(e.start)}</Badge>
+                      <Badge tone={(new Date(e.start).getTime() - now) / 864e5 < 4 ? "danger" : "outline"}>{relativeDays(e.start)}</Badge>
                     </div>
                     <p className="truncate text-xs text-muted-foreground">{e.title} · {fmtDateTime(e.start)}</p>
                     <div className="mt-2 flex items-center gap-2" title="Lernfortschritt">

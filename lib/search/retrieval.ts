@@ -92,7 +92,10 @@ export async function retrieve(userId: string, query: string, opts: RetrievalOpt
           AND (${projectId}::text IS NULL OR d."projectId" = ${projectId})
         ORDER BY c.embedding <=> ${toVectorLiteral(vec)}::vector
         LIMIT 30`;
-      for (const r of res) (vectorIds.push(r.id), rows.set(r.id, r));
+      for (const r of res) {
+        vectorIds.push(r.id);
+        rows.set(r.id, r);
+      }
     } catch (err) {
       logger.warn("retrieval.vector_failed", { error: err instanceof Error ? err.message : String(err) });
     }
@@ -109,7 +112,10 @@ export async function retrieve(userId: string, query: string, opts: RetrievalOpt
         AND (${projectId}::text IS NULL OR d."projectId" = ${projectId})
       ORDER BY ts_rank_cd(c."searchVector", to_tsquery('simple', ${tsquery})) DESC
       LIMIT 30`;
-    for (const r of res) (keywordIds.push(r.id), rows.set(r.id, r));
+    for (const r of res) {
+      keywordIds.push(r.id);
+      rows.set(r.id, r);
+    }
   }
 
   const fused = reciprocalRankFusion([vectorIds, keywordIds]);

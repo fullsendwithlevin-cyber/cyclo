@@ -9,7 +9,7 @@ import { KIND_LABEL, ResultIcon } from "@/components/search/result-icon";
 import { Spinner } from "@/components/ui/feedback";
 import { NAV } from "./nav";
 
-export function CommandPalette({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function CommandPalette({ onClose }: { onClose: () => void }) {
   const router = useRouter();
   const ref = useRef<HTMLDialogElement>(null);
   const [q, setQ] = useState("");
@@ -17,24 +17,16 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
   const [loading, setLoading] = useState(false);
   const [active, setActive] = useState(0);
 
+  // Wird nur bei geöffneter Palette gemountet → frischer Zustand bei jedem Öffnen
   useEffect(() => {
     const d = ref.current;
-    if (!d) return;
-    if (open && !d.open) {
-      d.showModal();
-      setQ("");
-      setResults([]);
-    }
-    if (!open && d.open) d.close();
-  }, [open]);
+    if (d && !d.open) d.showModal();
+  }, []);
 
   useEffect(() => {
-    if (q.trim().length < 2) {
-      setResults([]);
-      return;
-    }
-    setLoading(true);
+    if (q.trim().length < 2) return;
     const t = setTimeout(() => {
+      setLoading(true);
       apiFetch<{ results: SearchResult[] }>(`/api/search?live=0&q=${encodeURIComponent(q)}`)
         .then((r) => setResults(r.results.slice(0, 8)))
         .catch(() => setResults([]))
@@ -43,13 +35,14 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
     return () => clearTimeout(t);
   }, [q]);
 
+  const shown = q.trim().length >= 2 ? results : [];
   const nav = q ? NAV.filter((n) => n.label.toLowerCase().includes(q.toLowerCase())).slice(0, 4) : NAV.slice(0, 6);
   type Item = { key: string; label: string; sub?: string; icon: React.ReactNode; go: () => void };
   const items: Item[] = [
     ...(q.trim()
       ? [{ key: "ask", label: `Assistent fragen: „${q}“`, icon: <MessageSquare className="h-4 w-4" />, go: () => router.push(`/chat?q=${encodeURIComponent(q)}`) }]
       : []),
-    ...results.map((r) => ({
+    ...shown.map((r) => ({
       key: `${r.kind}:${r.id}`,
       label: r.title,
       sub: KIND_LABEL[r.kind],
@@ -83,9 +76,10 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
             setActive(0);
           }}
           onKeyDown={(e) => {
-            if (e.key === "ArrowDown") (e.preventDefault(), setActive((a) => Math.min(a + 1, items.length - 1)));
-            if (e.key === "ArrowUp") (e.preventDefault(), setActive((a) => Math.max(a - 1, 0)));
-            if (e.key === "Enter") (e.preventDefault(), select(active));
+            if (e.key === "ArrowDown" || e.key === "ArrowUp" || e.key === "Enter") e.preventDefault();
+            if (e.key === "ArrowDown") setActive((a) => Math.min(a + 1, items.length - 1));
+            if (e.key === "ArrowUp") setActive((a) => Math.max(a - 1, 0));
+            if (e.key === "Enter") select(active);
           }}
           placeholder="Suchen oder Frage stellen …"
           className="h-12 flex-1 bg-transparent text-sm outline-none"

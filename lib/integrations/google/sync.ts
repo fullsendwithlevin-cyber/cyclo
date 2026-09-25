@@ -5,16 +5,20 @@ import { wrapExternal } from "@/lib/agents/injection";
 import { GmailProvider, type EmailSummary } from "./gmail";
 
 const IMPORTANT_KEYWORDS =
-  /\b(prüfung|pruefung|klausur|test|termin|deadline|frist|abgabe|dringend|wichtig|verschoben|abgesagt|änderung|noten?|zeugnis|anmeldung|einladung|rechnung|mahnung)\b/i;
+  /(?<!\p{L})(prüfung|pruefung|klausur|test|termin|deadline|frist|abgabe|dringend|wichtig|verschoben|abgesagt|änderung|noten?|zeugnis|anmeldung|einladung|rechnung|mahnung)(?!\p{L})/iu;
 const SCHOOL_SENDER = /(schule|school|edu|hf|fh|uni|gymnasium|bbz|gibb|ading|lehrer|dozent)/i;
 
 /** Regelbasierte Wichtigkeit (0..1) als Fallback und Vorfilter. */
 export function heuristicImportance(m: Pick<EmailSummary, "from" | "subject" | "snippet" | "labels">): { score: number; reason: string } {
   let score = 0.2;
   const reasons: string[] = [];
-  if (m.labels.includes("IMPORTANT")) (score += 0.2), reasons.push("von Gmail als wichtig markiert");
-  if (SCHOOL_SENDER.test(m.from)) (score += 0.25), reasons.push("Absender Schule/Hochschule");
-  if (IMPORTANT_KEYWORDS.test(`${m.subject} ${m.snippet}`)) (score += 0.25), reasons.push("enthält Termin-/Fristbegriffe");
+  const add = (points: number, reason: string) => {
+    score += points;
+    reasons.push(reason);
+  };
+  if (m.labels.includes("IMPORTANT")) add(0.2, "von Gmail als wichtig markiert");
+  if (SCHOOL_SENDER.test(m.from)) add(0.25, "Absender Schule/Hochschule");
+  if (IMPORTANT_KEYWORDS.test(`${m.subject} ${m.snippet}`)) add(0.25, "enthält Termin-/Fristbegriffe");
   if (m.labels.some((l) => l === "CATEGORY_PROMOTIONS" || l === "CATEGORY_SOCIAL")) score -= 0.3;
   return { score: Math.max(0, Math.min(1, score)), reason: reasons.join(", ") || "keine besonderen Merkmale" };
 }

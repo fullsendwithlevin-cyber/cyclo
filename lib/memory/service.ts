@@ -38,9 +38,9 @@ export function isStorable(content: string): { ok: boolean; reason?: string } {
 /** Heuristische Klassifikation (Fallback, wenn kein Modell verfügbar ist). */
 export function classifyMemory(content: string): MemoryType {
   const c = content.toLowerCase();
-  if (/\b(bevorzug|lieber|mag |mag\b|möchte immer|am liebsten|prefer|nie vor|nicht vor \d|immer um)\b/.test(c)) return "PREFERENCE";
+  if (/(?<!\p{L})(bevorzug|lieber|mag|möchte immer|am liebsten|prefer|nie vor|nicht vor \d|immer um)/u.test(c)) return "PREFERENCE";
   if (/\b(projekt|arbeite an|muss noch|bis ende|deadline|abgabe)\b/.test(c)) return "TASK";
-  if (/\b(gestern|letzte woche|am \d{1,2}\.|habe .* (bestanden|abgegeben|erledigt)|war )\b/.test(c)) return "EPISODIC";
+  if (/(?<!\p{L})(gestern|letzte woche|am \d{1,2}\.|habe .* (bestanden|abgegeben|erledigt)|war )/u.test(c)) return "EPISODIC";
   return "SEMANTIC";
 }
 

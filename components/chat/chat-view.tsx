@@ -21,6 +21,7 @@ interface ChatMessage {
   role: "USER" | "ASSISTANT" | "SYSTEM";
   content: string;
   parts: MessagePart[];
+  agentRunId?: string | null;
   createdAt: string;
 }
 
@@ -64,6 +65,7 @@ export function ChatView({ conversationId: initialId, initialQuery }: { conversa
   const messages = [...(data?.messages ?? []), ...pending.filter((p) => !data?.messages.some((m) => m.id === p.id))];
   const toolCallStatus = { ...(data?.toolCallStatus ?? {}), ...statusOverride };
   const busy = live !== null;
+  const stepsByRun = new Map((data?.runs ?? []).map((r) => [r.id, r.steps]));
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -219,6 +221,9 @@ export function ChatView({ conversationId: initialId, initialQuery }: { conversa
                     <Sparkles className="h-3.5 w-3.5" />
                   </span>
                   <div className="min-w-0 flex-1 space-y-3">
+                    {m.agentRunId && (stepsByRun.get(m.agentRunId)?.length ?? 0) > 0 && (
+                      <RunSteps steps={stepsByRun.get(m.agentRunId)!} className="rounded-lg border bg-muted/20 p-3" />
+                    )}
                     <Markdown text={m.content} onCite={(n) => setCite({ messageId: m.id, n })} />
                     <PartsView parts={m.parts} toolCallStatus={toolCallStatus} onDecide={decide} highlight={cite?.messageId === m.id ? cite.n : null} />
                     <div className="flex items-center gap-2 text-[11px] text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">

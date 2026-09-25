@@ -26,7 +26,7 @@ export const POST = api(async ({ req, user }) => {
   const target = body.target ?? ((await isGoogleCalendarConnected(user.id)) ? "google" : "local");
   let examId: string | null = null;
   if (isExam) {
-    const subject = title.replace(/\b(prüfung|pruefung|klausur|test|exam|schularbeit)\b/gi, "").trim() || "Prüfung";
+    const subject = title.replace(/(?<!\p{L})(prüfung|pruefung|klausur|test|exam|schularbeit)(?!\p{L})/giu, "").trim() || "Prüfung";
     examId = (await upsertExam(user.id, { subject, title, start, end: parsed.hasTime ? end : null, source: "MANUAL" })).exam.id;
   }
   const created = await createCalendarEvent(user.id, { title, start, end, allDay: !parsed.hasTime, kind: isExam ? "EXAM" : "EVENT" }, user.timezone, { target, source: "MANUAL", examId });

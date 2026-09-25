@@ -33,14 +33,15 @@ export function parseGermanDateTime(input: string, now: Date, tz: string): Parse
   let explicit: { y: number; m: number; d: number } | null = null;
   const matchedParts: string[] = [];
 
-  const rel = lower.match(/\b(heute|morgen|übermorgen|uebermorgen)\b/);
+  // Unicode-bewusste Wortgrenzen (\b kennt kein „ü“)
+  const rel = lower.match(/(?<!\p{L})(heute|übermorgen|uebermorgen|morgen)(?!\p{L})/u);
   if (rel) {
     dayOffset = rel[1] === "heute" ? 0 : rel[1] === "morgen" ? 1 : 2;
     matchedParts.push(rel[0]);
   }
 
   // „nächsten Freitag“ wird wie „Freitag“ als der kommende Freitag interpretiert.
-  const wd = lower.match(/(?:\b(?:nächste[nrs]?|naechste[nrs]?|kommende[nrs]?)\s+)?\b(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)\b/);
+  const wd = lower.match(/(?:(?<!\p{L})(?:nächste[nrs]?|naechste[nrs]?|kommende[nrs]?)\s+)?(?<!\p{L})(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)(?!\p{L})/u);
   if (dayOffset === null && wd) {
     const target = WEEKDAYS[wd[1]];
     const today = zonedParts(now, tz).weekday;
