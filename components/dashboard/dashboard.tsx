@@ -24,7 +24,7 @@ import { RunSteps, StepIcon } from "@/components/agent/run-steps";
 import { apiFetch, useApi } from "@/lib/client/api";
 import { fmtDate, fmtDateTime, fmtLongDate, fmtTime, relativeDays } from "@/lib/client/format";
 import { useToast } from "@/components/ui/toast";
-import { useNow } from "@/lib/client/hooks";
+import { useClientValue, useNow } from "@/lib/client/hooks";
 import { Section } from "./section";
 import { ToolLabel } from "@/components/agent/tool-label";
 import type { ErrorInfo } from "@/lib/errors";
@@ -56,6 +56,9 @@ export function Dashboard() {
   const toast = useToast();
   const [ask, setAsk] = useState("");
   const now = useNow();
+  // Nur im Browser berechnen: Server-Zeitzone ≠ Benutzer-Zeitzone (sonst Hydration-Fehler)
+  const today = useClientValue(() => fmtLongDate(new Date()), "");
+  const hello = useClientValue(greeting, "Hallo");
 
   const completeTask = async (id: string) => {
     try {
@@ -71,8 +74,8 @@ export function Dashboard() {
     <div className="space-y-5">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-sm text-muted-foreground">{fmtLongDate(new Date())}</p>
-          <h1 className="text-2xl font-semibold tracking-tight">{greeting()}</h1>
+          <p className="min-h-5 text-sm text-muted-foreground">{today}</p>
+          <h1 className="text-2xl font-semibold tracking-tight">{hello}</h1>
         </div>
         <form
           className="flex w-full items-center gap-2 rounded-xl border bg-card p-1.5 pl-3 shadow-sm md:max-w-md"
