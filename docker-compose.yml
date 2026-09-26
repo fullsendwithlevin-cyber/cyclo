@@ -1,0 +1,45 @@
+# Lokaler/Self-Hosted-Betrieb: Postgres mit pgvector, Web-App und Worker.
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: assistant
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-assistant}
+      POSTGRES_DB: assistant
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U assistant"]
+      interval: 5s
+      retries: 10
+
+  migrate:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://assistant:${POSTGRES_PASSWORD:-assistant}@db:5432/assistant
+    command: ["npx", "prisma", "migrate", "deploy"]
+    depends_on: { db: { condition: service_healthy } }
+
+  web:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://assistant:${POSTGRES_PASSWORD:-assistant}@db:5432/assistant
+      UPLOAD_DIR: /app/storage/uploads
+    ports: ["3000:3000"]
+    volumes: [uploads:/app/storage]
+    depends_on: { migrate: { condition: service_completed_successfully } }
+
+  worker:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://assistant:${POSTGRES_PASSWORD:-assistant}@db:5432/assistant
+      UPLOAD_DIR: /app/storage/uploads
+    command: ["npx", "tsx", "workers/index.ts"]
+    volumes: [uploads:/app/storage]
+    depends_on: { migrate: { condition: service_completed_successfully } }
+
+volumes:
+  pgdata:
+  uploads:

@@ -1,0 +1,705 @@
+// Datenmodell des persönlichen KI-Assistenten.
+// Alle benutzerbezogenen Tabellen hängen per userId (onDelete: Cascade) am User.
+// pgvector-/Volltext-Indexe werden in den Migrationen per SQL angelegt.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ───────────────────────────── Enums ─────────────────────────────
+
+enum AutonomyMode {
+  SAFE
+  ASSISTED
+  AUTONOMOUS
+}
+
+enum PermissionCategory {
+  READ
+  WRITE
+  DELETE
+  SEND
+  EXTERNAL_ACTION
+  FINANCIAL
+  SENSITIVE
+}
+
+enum PermissionDecision {
+  ALLOW
+  CONFIRM
+  DENY
+}
+
+enum IntegrationProvider {
+  GOOGLE
+  MICROSOFT
+  SCHOOL_ICS
+  WEB_SEARCH
+}
+
+enum IntegrationStatus {
+  CONNECTED
+  EXPIRED
+  ERROR
+  DISCONNECTED
+}
+
+enum TaskStatus {
+  INBOX
+  PLANNED
+  IN_PROGRESS
+  WAITING
+  DONE
+  CANCELLED
+}
+
+enum TaskPriority {
+  URGENT
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum ProjectStatus {
+  ACTIVE
+  PAUSED
+  DONE
+  ARCHIVED
+}
+
+enum EventKind {
+  EVENT
+  STUDY_BLOCK
+  EXAM
+  WORK
+  REMINDER
+}
+
+enum EventStatus {
+  CONFIRMED
+  TENTATIVE
+  PROPOSED
+  CANCELLED
+}
+
+enum DataSource {
+  MANUAL
+  AGENT
+  GOOGLE_CALENDAR
+  GMAIL
+  GOOGLE_DRIVE
+  ONENOTE
+  SCHOOL
+  UPLOAD
+  WEB
+}
+
+enum DocumentStatus {
+  UPLOADED
+  PROCESSING
+  INDEXED
+  FAILED
+}
+
+enum MemoryType {
+  EPISODIC
+  SEMANTIC
+  TASK
+  PREFERENCE
+}
+
+enum NotificationPriority {
+  CRITICAL
+  IMPORTANT
+  NORMAL
+  LOW
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+enum AgentRunStatus {
+  RUNNING
+  AWAITING_CONFIRMATION
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum AgentStepStatus {
+  PENDING
+  RUNNING
+  DONE
+  WAITING
+  FAILED
+  SKIPPED
+}
+
+enum ToolCallStatus {
+  AWAITING_CONFIRMATION
+  REJECTED
+  DENIED
+  RUNNING
+  SUCCEEDED
+  FAILED
+}
+
+enum JobStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+}
+
+enum Actor {
+  USER
+  AGENT
+  SYSTEM
+}
+
+// ───────────────────────────── Identität ─────────────────────────────
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  image     String?
+  timezone  String   @default("Europe/Zurich")
+  locale    String   @default("de-CH")
+  /// Benutzerpräferenzen (Arbeitszeiten, Lernpräferenzen, Relevanzschwelle, Briefing-Zeit …)
+  settings  Json     @default("{}")
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  accounts         Account[]
+  sessions         Session[]
+  integrations     Integration[]
+  permissions      PermissionSetting[]
+  conversations    Conversation[]
+  tasks            Task[]
+  projects         Project[]
+  events           CalendarEvent[]
+  exams            Exam[]
+  reminders        Reminder[]
+  documents        Document[]
+  chunks           DocumentChunk[]
+  notes            Note[]
+  memories         Memory[]
+  notifications    Notification[]
+  pushSubscriptions PushSubscription[]
+  automations      Automation[]
+  domainEvents     DomainEvent[]
+  sourceItems      SourceItem[]
+  agentRuns        AgentRun[]
+  toolCalls        ToolCall[]
+  auditLogs        AuditLog[]
+  jobs             Job[]
+}
+
+/// Login-Identität (z. B. Google-Konto) – getrennt von Daten-Integrationen.
+model Account {
+  id                String   @id @default(cuid())
+  userId            String
+  provider          String
+  providerAccountId String
+  createdAt         DateTime @default(now()) @db.Timestamptz(3)
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  /// SHA-256 des Session-Tokens; das Token selbst liegt nur im Cookie.
+  tokenHash String   @unique
+  expiresAt DateTime @db.Timestamptz(3)
+  userAgent String?
+  ip        String?
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+/// Verbindung zu einem externen Dienst. Tokens sind AES-256-GCM-verschlüsselt.
+model Integration {
+  id                   String              @id @default(cuid())
+  userId               String
+  provider             IntegrationProvider
+  status               IntegrationStatus   @default(CONNECTED)
+  externalAccountEmail String?
+  scopes               String[]
+  accessTokenEnc       String?
+  refreshTokenEnc      String?
+  expiresAt            DateTime?           @db.Timestamptz(3)
+  /// Provider-spezifische Konfiguration; geheime Werte verschlüsselt (z. B. ICS-URL).
+  configEnc            String?
+  autonomyMode         AutonomyMode        @default(ASSISTED)
+  lastSyncAt           DateTime?           @db.Timestamptz(3)
+  lastError            String?
+  createdAt            DateTime            @default(now()) @db.Timestamptz(3)
+  updatedAt            DateTime            @updatedAt @db.Timestamptz(3)
+  user                 User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, provider])
+}
+
+/// Benutzer-Override je Tool (z. B. "email.send" → CONFIRM).
+model PermissionSetting {
+  id        String             @id @default(cuid())
+  userId    String
+  toolName  String
+  decision  PermissionDecision
+  updatedAt DateTime           @updatedAt @db.Timestamptz(3)
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, toolName])
+}
+
+// ───────────────────────────── Konversation ─────────────────────────────
+
+model Conversation {
+  id        String     @id @default(cuid())
+  userId    String
+  title     String     @default("Neue Unterhaltung")
+  projectId String?
+  createdAt DateTime   @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime   @updatedAt @db.Timestamptz(3)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project   Project?   @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  messages  Message[]
+  agentRuns AgentRun[]
+
+  @@index([userId, updatedAt])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  role           MessageRole
+  content        String
+  /// Strukturierte Teile: Tool-Aktivität, Quellen, Visualisierungen, Anhänge.
+  parts          Json         @default("[]")
+  agentRunId     String?
+  createdAt      DateTime     @default(now()) @db.Timestamptz(3)
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+}
+
+// ───────────────────────────── Produktivität ─────────────────────────────
+
+model Project {
+  id            String         @id @default(cuid())
+  userId        String
+  name          String
+  description   String?
+  status        ProjectStatus  @default(ACTIVE)
+  color         String?
+  dueDate       DateTime?      @db.Timestamptz(3)
+  createdAt     DateTime       @default(now()) @db.Timestamptz(3)
+  updatedAt     DateTime       @updatedAt @db.Timestamptz(3)
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks         Task[]
+  milestones    Milestone[]
+  events        CalendarEvent[]
+  documents     Document[]
+  notes         Note[]
+  exams         Exam[]
+  conversations Conversation[]
+
+  @@index([userId, status])
+}
+
+model Milestone {
+  id        String    @id @default(cuid())
+  projectId String
+  title     String
+  dueDate   DateTime? @db.Timestamptz(3)
+  done      Boolean   @default(false)
+  createdAt DateTime  @default(now()) @db.Timestamptz(3)
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+model Task {
+  id                String       @id @default(cuid())
+  userId            String
+  title             String
+  description       String?
+  status            TaskStatus   @default(INBOX)
+  priority          TaskPriority @default(MEDIUM)
+  dueDate           DateTime?    @db.Timestamptz(3)
+  estimatedMinutes  Int?
+  projectId         String?
+  examId            String?
+  source            DataSource   @default(MANUAL)
+  sourceRef         String?
+  completedAt       DateTime?    @db.Timestamptz(3)
+  createdAt         DateTime     @default(now()) @db.Timestamptz(3)
+  updatedAt         DateTime     @updatedAt @db.Timestamptz(3)
+  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project           Project?     @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  exam              Exam?        @relation(fields: [examId], references: [id], onDelete: SetNull)
+  dependsOn         Task[]       @relation("TaskDependencies")
+  dependents        Task[]       @relation("TaskDependencies")
+  reminders         Reminder[]
+
+  @@index([userId, status])
+  @@index([userId, dueDate])
+  @@index([projectId])
+}
+
+model CalendarEvent {
+  id            String      @id @default(cuid())
+  userId        String
+  title         String
+  description   String?
+  location      String?
+  start         DateTime    @db.Timestamptz(3)
+  end           DateTime    @db.Timestamptz(3)
+  allDay        Boolean     @default(false)
+  kind          EventKind   @default(EVENT)
+  status        EventStatus @default(CONFIRMED)
+  source        DataSource  @default(MANUAL)
+  /// ID im externen System (z. B. Google-Event-ID); leer bei lokalen Terminen.
+  externalId    String?
+  calendarId    String?
+  projectId     String?
+  examId        String?
+  createdAt     DateTime    @default(now()) @db.Timestamptz(3)
+  updatedAt     DateTime    @updatedAt @db.Timestamptz(3)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project       Project?    @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  exam          Exam?       @relation(fields: [examId], references: [id], onDelete: SetNull)
+  reminders     Reminder[]
+
+  @@unique([userId, source, externalId])
+  @@index([userId, start])
+}
+
+model Exam {
+  id         String          @id @default(cuid())
+  userId     String
+  subject    String
+  title      String
+  start      DateTime        @db.Timestamptz(3)
+  end        DateTime?       @db.Timestamptz(3)
+  location   String?
+  topics     String[]
+  notes      String?
+  source     DataSource      @default(MANUAL)
+  externalId String?
+  projectId  String?
+  createdAt  DateTime        @default(now()) @db.Timestamptz(3)
+  updatedAt  DateTime        @updatedAt @db.Timestamptz(3)
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project    Project?        @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  events     CalendarEvent[]
+  tasks      Task[]
+
+  @@unique([userId, source, externalId])
+  @@index([userId, start])
+}
+
+model Reminder {
+  id        String         @id @default(cuid())
+  userId    String
+  title     String
+  remindAt  DateTime       @db.Timestamptz(3)
+  taskId    String?
+  eventId   String?
+  sentAt    DateTime?      @db.Timestamptz(3)
+  createdAt DateTime       @default(now()) @db.Timestamptz(3)
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  task      Task?          @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  event     CalendarEvent? @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([remindAt, sentAt])
+  @@index([userId])
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  userId    String
+  projectId String?
+  title     String
+  content   String
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+}
+
+// ───────────────────────────── Wissen ─────────────────────────────
+
+model Document {
+  id          String          @id @default(cuid())
+  userId      String
+  projectId   String?
+  title       String
+  filename    String
+  mimeType    String
+  size        Int
+  sha256      String
+  storagePath String?
+  status      DocumentStatus  @default(UPLOADED)
+  source      DataSource      @default(UPLOAD)
+  externalId  String?
+  url         String?
+  pageCount   Int?
+  textLength  Int?
+  metadata    Json            @default("{}")
+  error       String?
+  createdAt   DateTime        @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime        @updatedAt @db.Timestamptz(3)
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project     Project?        @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  chunks      DocumentChunk[]
+
+  @@unique([userId, source, externalId])
+  @@index([userId, createdAt])
+  @@index([userId, sha256])
+}
+
+model DocumentChunk {
+  id           String                       @id @default(cuid())
+  documentId   String
+  userId       String
+  index        Int
+  content      String
+  tokenCount   Int
+  /// z. B. { page, heading }
+  metadata     Json                         @default("{}")
+  embedding    Unsupported("vector(1536)")?
+  searchVector Unsupported("tsvector")?
+  createdAt    DateTime                     @default(now()) @db.Timestamptz(3)
+  document     Document                     @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user         User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, index])
+  @@index([userId])
+}
+
+model Memory {
+  id             String                       @id @default(cuid())
+  userId         String
+  type           MemoryType
+  content        String
+  /// 0..1 – steuert Abruf-Priorität und Aufbewahrung.
+  importance     Float                        @default(0.5)
+  source         String                       @default("chat")
+  sourceRef      String?
+  embedding      Unsupported("vector(1536)")?
+  expiresAt      DateTime?                    @db.Timestamptz(3)
+  lastAccessedAt DateTime?                    @db.Timestamptz(3)
+  createdAt      DateTime                     @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime                     @updatedAt @db.Timestamptz(3)
+  user           User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+}
+
+/// Normalisierte Einträge aus externen Quellen (Mails, OneNote-Seiten, Schul-Einträge).
+model SourceItem {
+  id          String     @id @default(cuid())
+  userId      String
+  source      DataSource
+  externalId  String
+  title       String
+  snippet     String?
+  url         String?
+  author      String?
+  occurredAt  DateTime?  @db.Timestamptz(3)
+  metadata    Json       @default("{}")
+  relevance   Float?
+  documentId  String?
+  processedAt DateTime?  @db.Timestamptz(3)
+  createdAt   DateTime   @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime   @updatedAt @db.Timestamptz(3)
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, source, externalId])
+  @@index([userId, occurredAt])
+}
+
+// ───────────────────────────── Proaktivität ─────────────────────────────
+
+model Notification {
+  id        String               @id @default(cuid())
+  userId    String
+  title     String
+  body      String
+  priority  NotificationPriority @default(NORMAL)
+  category  String
+  link      String?
+  dedupeKey String?
+  readAt    DateTime?            @db.Timestamptz(3)
+  pushedAt  DateTime?            @db.Timestamptz(3)
+  emailedAt DateTime?            @db.Timestamptz(3)
+  createdAt DateTime             @default(now()) @db.Timestamptz(3)
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, dedupeKey])
+  @@index([userId, readAt, createdAt])
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Automation {
+  id        String    @id @default(cuid())
+  userId    String
+  name      String
+  /// Event-Typ (z. B. "exam.detected") oder "schedule"
+  trigger   String
+  config    Json      @default("{}")
+  enabled   Boolean   @default(true)
+  lastRunAt DateTime? @db.Timestamptz(3)
+  createdAt DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime  @updatedAt @db.Timestamptz(3)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, trigger])
+}
+
+/// Fachliches Ereignis (neue Prüfung, wichtige Mail, Deadline …) für den Automation-Layer.
+model DomainEvent {
+  id          String    @id @default(cuid())
+  userId      String
+  type        String
+  payload     Json      @default("{}")
+  relevance   Float?
+  dedupeKey   String?
+  processedAt DateTime? @db.Timestamptz(3)
+  createdAt   DateTime  @default(now()) @db.Timestamptz(3)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, dedupeKey])
+  @@index([userId, processedAt])
+}
+
+// ───────────────────────────── Agent & Observability ─────────────────────────────
+
+model AgentRun {
+  id             String         @id @default(cuid())
+  userId         String
+  conversationId String?
+  trigger        String         @default("chat")
+  goal           String
+  status         AgentRunStatus @default(RUNNING)
+  /// Serialisiertes Provider-neutrales Transkript zum Fortsetzen nach Bestätigung.
+  state          Json           @default("{}")
+  /// true, sobald untrusted externe Inhalte in den Kontext gelangt sind.
+  tainted        Boolean        @default(false)
+  provider       String?
+  model          String?
+  usage          Json           @default("{}")
+  error          String?
+  startedAt      DateTime       @default(now()) @db.Timestamptz(3)
+  finishedAt     DateTime?      @db.Timestamptz(3)
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation   Conversation?  @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  steps          AgentStep[]
+  toolCalls      ToolCall[]
+
+  @@index([userId, startedAt])
+  @@index([status])
+}
+
+model AgentStep {
+  id         String          @id @default(cuid())
+  runId      String
+  index      Int
+  title      String
+  status     AgentStepStatus @default(PENDING)
+  detail     String?
+  toolCallId String?
+  startedAt  DateTime?       @db.Timestamptz(3)
+  finishedAt DateTime?       @db.Timestamptz(3)
+  run        AgentRun        @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@index([runId, index])
+}
+
+model ToolCall {
+  id             String             @id @default(cuid())
+  runId          String
+  userId         String
+  providerCallId String
+  toolName       String
+  permission     PermissionCategory
+  decision       PermissionDecision
+  status         ToolCallStatus
+  /// Redigierte Ein-/Ausgaben (keine Tokens, keine vollständigen Mailtexte).
+  input          Json               @default("{}")
+  output         Json?
+  error          String?
+  durationMs     Int?
+  confirmedAt    DateTime?          @db.Timestamptz(3)
+  createdAt      DateTime           @default(now()) @db.Timestamptz(3)
+  run            AgentRun           @relation(fields: [runId], references: [id], onDelete: Cascade)
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([runId])
+  @@index([userId, createdAt])
+  @@index([userId, status])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  actor     Actor
+  action    String
+  target    String?
+  metadata  Json     @default("{}")
+  ip        String?
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([action])
+}
+
+model Job {
+  id          String    @id @default(cuid())
+  userId      String?
+  type        String
+  payload     Json      @default("{}")
+  status      JobStatus @default(QUEUED)
+  runAt       DateTime  @default(now()) @db.Timestamptz(3)
+  attempts    Int       @default(0)
+  maxAttempts Int       @default(3)
+  lastError   String?
+  lockedAt    DateTime? @db.Timestamptz(3)
+  lockedBy    String?
+  dedupeKey   String?   @unique
+  createdAt   DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime  @updatedAt @db.Timestamptz(3)
+  user        User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status, runAt])
+}
