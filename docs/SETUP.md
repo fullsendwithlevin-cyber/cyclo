@@ -15,7 +15,7 @@ Alle Variablen stehen mit Erklärung in `.env.example`. Minimal nötig:
 | `DATABASE_URL` | Postgres-Verbindung |
 | `APP_URL` | Öffentliche URL (für OAuth-Redirects und Origin-Prüfung) |
 | `TOKEN_ENCRYPTION_KEY` | 32-Byte-Schlüssel (Base64) für die Verschlüsselung von OAuth-Tokens und ICS-URLs |
-| `ANTHROPIC_API_KEY` *oder* `AI_PROVIDER=openai` + `OPENAI_API_KEY` | Chat/Agent/OCR |
+| `ANTHROPIC_API_KEY` *oder* `AI_PROVIDER=openai` + `OPENAI_API_KEY` *oder* `AI_PROVIDER=gemini` + `GEMINI_API_KEY` (kostenlos, aistudio.google.com) | Chat/Agent/OCR (Gemini liefert auch Embeddings) |
 
 Ohne KI-Schlüssel funktionieren Aufgaben, Kalender, Prüfungen, Dokument-Upload (ohne OCR) und Suche;
 Chat und Agent zeigen dann einen Hinweis. Mit `OPENAI_API_KEY` werden zusätzlich Embeddings
@@ -78,7 +78,32 @@ Das Image baut Next.js im `standalone`-Modus; derselbe Container startet mit
 `npx tsx workers/index.ts` als Worker. Hinter einem Reverse Proxy HTTPS terminieren und `APP_URL`
 auf die öffentliche HTTPS-URL setzen (Session-Cookie ist dann `__Host-`/`Secure`).
 
-## 9. Migrationen
+## 9. Kostenlos betreiben
+
+| Baustein | Gratis-Option |
+|---|---|
+| Server | Oracle Cloud „Always Free“ (ARM-VM, 4 Kerne/24 GB) oder eigener PC/Raspberry Pi mit Docker |
+| Domain + HTTPS | DuckDNS-Subdomain (z. B. `mein-name.duckdns.org`) + Caddy-Profil aus `docker-compose.yml` |
+| KI | `AI_PROVIDER=gemini` + `GEMINI_API_KEY` von aistudio.google.com (Gratis-Kontingent mit Ratenlimits) |
+| Google-Login/Calendar/Gmail | Google Cloud OAuth-Client (gratis; App im Modus „Testing“, eigene Adresse als Testnutzer) |
+| Datenbank, Worker | im Docker-Compose enthalten |
+
+Ablauf auf dem Server:
+
+```bash
+git clone https://github.com/fullsendwithlevin-cyber/cyclo && cd cyclo
+cp .env.example .env
+# .env: APP_URL=https://mein-name.duckdns.org, ALLOW_DEV_LOGIN=false,
+#       TOKEN_ENCRYPTION_KEY=$(openssl rand -base64 32), AI_PROVIDER=gemini, GEMINI_API_KEY=…,
+#       GOOGLE_CLIENT_ID/SECRET=…, POSTGRES_PASSWORD=<zufällig>
+DOMAIN=mein-name.duckdns.org docker compose --profile https up -d --build
+```
+
+Ports 80/443 in der Firewall (bei Oracle zusätzlich in der „Security List“) öffnen.
+Hinweis: Gratis-Kontingente können Ratenlimits haben; Spracherkennung auf dem Server braucht
+weiterhin `OPENAI_API_KEY` – ohne ihn nutzt die App die Spracherkennung des Browsers.
+
+## 10. Migrationen
 
 `prisma migrate dev --create-only` erzeugt neue Migrationen. Prisma kennt die pgvector-/Volltext-
 Indexe nicht und schlägt vor, sie zu löschen – `npm run db:check` verhindert, dass solche

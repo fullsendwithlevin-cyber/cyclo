@@ -40,6 +40,17 @@ services:
     volumes: [uploads:/app/storage]
     depends_on: { migrate: { condition: service_completed_successfully } }
 
+  # Optional: automatisches HTTPS (Let's Encrypt). Start mit
+  #   DOMAIN=mein-name.duckdns.org docker compose --profile https up -d --build
+  caddy:
+    image: caddy:2
+    profiles: [https]
+    command: ["caddy", "reverse-proxy", "--from", "${DOMAIN:-localhost}", "--to", "web:3000"]
+    ports: ["80:80", "443:443"]
+    volumes: [caddy:/data]
+    depends_on: [web]
+
 volumes:
   pgdata:
   uploads:
+  caddy:

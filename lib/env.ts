@@ -7,7 +7,7 @@ const schema = z.object({
   TOKEN_ENCRYPTION_KEY: z.string().min(1),
   ALLOW_DEV_LOGIN: z.enum(["true", "false"]).default("false"),
 
-  AI_PROVIDER: z.enum(["anthropic", "openai", "scripted"]).default("anthropic"),
+  AI_PROVIDER: z.enum(["anthropic", "openai", "gemini", "scripted"]).default("anthropic"),
   ANTHROPIC_API_KEY: z.string().optional(),
   ANTHROPIC_MODEL: z.string().default("claude-opus-5"),
   ANTHROPIC_EFFORT: z.enum(["low", "medium", "high", "xhigh", "max"]).default("high"),
@@ -16,6 +16,9 @@ const schema = z.object({
   OPENAI_MODEL: z.string().default("gpt-5"),
   OPENAI_EMBEDDING_MODEL: z.string().default("text-embedding-3-small"),
   OPENAI_TRANSCRIBE_MODEL: z.string().default("gpt-4o-transcribe"),
+  GEMINI_API_KEY: z.string().optional(),
+  GEMINI_MODEL: z.string().default("gemini-2.5-flash"),
+  GEMINI_EMBEDDING_MODEL: z.string().default("gemini-embedding-001"),
 
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
