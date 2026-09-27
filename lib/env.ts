@@ -7,7 +7,7 @@ const schema = z.object({
   TOKEN_ENCRYPTION_KEY: z.string().min(1),
   ALLOW_DEV_LOGIN: z.enum(["true", "false"]).default("false"),
 
-  AI_PROVIDER: z.enum(["anthropic", "openai", "gemini", "scripted"]).default("anthropic"),
+  AI_PROVIDER: z.enum(["anthropic", "openai", "gemini", "llama", "scripted"]).default("anthropic"),
   ANTHROPIC_API_KEY: z.string().optional(),
   ANTHROPIC_MODEL: z.string().default("claude-opus-5"),
   ANTHROPIC_EFFORT: z.enum(["low", "medium", "high", "xhigh", "max"]).default("high"),
@@ -19,6 +19,10 @@ const schema = z.object({
   GEMINI_API_KEY: z.string().optional(),
   GEMINI_MODEL: z.string().default("gemini-2.5-flash"),
   GEMINI_EMBEDDING_MODEL: z.string().default("gemini-embedding-001"),
+  LLAMA_BASE_URL: z.string().url().default("http://localhost:11434/v1"),
+  LLAMA_API_KEY: z.string().default("ollama"),
+  LLAMA_MODEL: z.string().default("llama3.1:8b"),
+  LLAMA_EMBEDDING_MODEL: z.string().optional(),
 
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),

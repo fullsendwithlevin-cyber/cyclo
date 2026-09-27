@@ -25,8 +25,10 @@ export function getAIProvider(): AIProvider {
   if (e.AI_PROVIDER === "scripted") return new ScriptedProvider(demoScript);
   if (e.AI_PROVIDER === "gemini") {
     if (!e.GEMINI_API_KEY) throw notConfigured("Gemini", "GEMINI_API_KEY");
-    return new OpenAIProvider(e.GEMINI_API_KEY, e.GEMINI_MODEL, GEMINI_BASE_URL);
+    return new OpenAIProvider(e.GEMINI_API_KEY, e.GEMINI_MODEL, { baseURL: GEMINI_BASE_URL, id: "gemini" });
   }
+  if (e.AI_PROVIDER === "llama")
+    return new OpenAIProvider(e.LLAMA_API_KEY, e.LLAMA_MODEL, { baseURL: e.LLAMA_BASE_URL, id: "llama" });
   if (e.AI_PROVIDER === "openai") {
     if (!e.OPENAI_API_KEY) throw notConfigured("OpenAI", "OPENAI_API_KEY");
     return new OpenAIProvider(e.OPENAI_API_KEY, e.OPENAI_MODEL);
@@ -45,6 +47,7 @@ export function isAIConfigured(): boolean {
   const e = env();
   if (e.AI_PROVIDER === "scripted") return true;
   if (e.AI_PROVIDER === "gemini") return Boolean(e.GEMINI_API_KEY);
+  if (e.AI_PROVIDER === "llama") return true;
   return e.AI_PROVIDER === "openai" ? Boolean(e.OPENAI_API_KEY) : Boolean(e.ANTHROPIC_API_KEY);
 }
 
@@ -53,7 +56,10 @@ export function getEmbeddingProvider(): EmbeddingProvider | null {
   if (embeddingOverride !== undefined) return embeddingOverride;
   const e = env();
   if (e.OPENAI_API_KEY) return new OpenAIEmbeddings(e.OPENAI_API_KEY, e.OPENAI_EMBEDDING_MODEL);
-  if (e.GEMINI_API_KEY) return new OpenAIEmbeddings(e.GEMINI_API_KEY, e.GEMINI_EMBEDDING_MODEL, GEMINI_BASE_URL);
+  if (e.GEMINI_API_KEY)
+    return new OpenAIEmbeddings(e.GEMINI_API_KEY, e.GEMINI_EMBEDDING_MODEL, { baseURL: GEMINI_BASE_URL, id: "gemini" });
+  if (e.LLAMA_EMBEDDING_MODEL)
+    return new OpenAIEmbeddings(e.LLAMA_API_KEY, e.LLAMA_EMBEDDING_MODEL, { baseURL: e.LLAMA_BASE_URL, id: "llama" });
   return null;
 }
 

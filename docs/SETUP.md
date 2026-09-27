@@ -15,7 +15,7 @@ Alle Variablen stehen mit Erklärung in `.env.example`. Minimal nötig:
 | `DATABASE_URL` | Postgres-Verbindung |
 | `APP_URL` | Öffentliche URL (für OAuth-Redirects und Origin-Prüfung) |
 | `TOKEN_ENCRYPTION_KEY` | 32-Byte-Schlüssel (Base64) für die Verschlüsselung von OAuth-Tokens und ICS-URLs |
-| `ANTHROPIC_API_KEY` *oder* `AI_PROVIDER=openai` + `OPENAI_API_KEY` *oder* `AI_PROVIDER=gemini` + `GEMINI_API_KEY` (kostenlos, aistudio.google.com) | Chat/Agent/OCR (Gemini liefert auch Embeddings) |
+| `ANTHROPIC_API_KEY` *oder* `AI_PROVIDER=openai` + `OPENAI_API_KEY` *oder* `AI_PROVIDER=gemini` + `GEMINI_API_KEY` (kostenlos, aistudio.google.com) *oder* `AI_PROVIDER=llama` (Ollama lokal / Groq, kostenlos) | Chat/Agent/OCR (Gemini liefert auch Embeddings) |
 
 Ohne KI-Schlüssel funktionieren Aufgaben, Kalender, Prüfungen, Dokument-Upload (ohne OCR) und Suche;
 Chat und Agent zeigen dann einen Hinweis. Mit `OPENAI_API_KEY` werden zusätzlich Embeddings
@@ -84,7 +84,7 @@ auf die öffentliche HTTPS-URL setzen (Session-Cookie ist dann `__Host-`/`Secure
 |---|---|
 | Server | Oracle Cloud „Always Free“ (ARM-VM, 4 Kerne/24 GB) oder eigener PC/Raspberry Pi mit Docker |
 | Domain + HTTPS | DuckDNS-Subdomain (z. B. `mein-name.duckdns.org`) + Caddy-Profil aus `docker-compose.yml` |
-| KI | `AI_PROVIDER=gemini` + `GEMINI_API_KEY` von aistudio.google.com (Gratis-Kontingent mit Ratenlimits) |
+| KI | `AI_PROVIDER=gemini` + `GEMINI_API_KEY` von aistudio.google.com (Gratis-Kontingent mit Ratenlimits) **oder** `AI_PROVIDER=llama`: Ollama im Compose-Profil `llama` (lokal, ohne Konto) bzw. Groq (Gratis-Kontingent) |
 | Google-Login/Calendar/Gmail | Google Cloud OAuth-Client (gratis; App im Modus „Testing“, eigene Adresse als Testnutzer) |
 | Datenbank, Worker | im Docker-Compose enthalten |
 
@@ -98,6 +98,18 @@ cp .env.example .env
 #       GOOGLE_CLIENT_ID/SECRET=…, POSTGRES_PASSWORD=<zufällig>
 DOMAIN=mein-name.duckdns.org docker compose --profile https up -d --build
 ```
+
+Mit Llama statt Gemini (lokal, ohne Konto):
+
+```bash
+# .env: AI_PROVIDER=llama, LLAMA_BASE_URL=http://ollama:11434/v1, LLAMA_EMBEDDING_MODEL=nomic-embed-text
+DOMAIN=mein-name.duckdns.org docker compose --profile https --profile llama up -d --build
+docker compose exec ollama ollama pull llama3.1:8b
+docker compose exec ollama ollama pull nomic-embed-text
+```
+
+`llama3.1:8b` braucht ca. 8 GB RAM und läuft ohne GPU langsam; kleine Modelle rufen Tools weniger
+zuverlässig auf als große. Schneller und stärker: Groq mit `llama-3.3-70b-versatile` (Gratis-Key).
 
 Ports 80/443 in der Firewall (bei Oracle zusätzlich in der „Security List“) öffnen.
 Hinweis: Gratis-Kontingente können Ratenlimits haben; Spracherkennung auf dem Server braucht
