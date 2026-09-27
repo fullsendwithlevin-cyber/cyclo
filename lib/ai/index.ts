@@ -1,7 +1,7 @@
 import { env } from "@/lib/env";
 import { AppError } from "@/lib/errors";
 import { AnthropicProvider } from "./anthropic";
-import { OpenAIEmbeddings, OpenAIProvider } from "./openai";
+import { GEMINI_BASE_URL, OpenAIEmbeddings, OpenAIProvider } from "./openai";
 import { demoScript, ScriptedProvider } from "./scripted";
 import type { AIProvider, EmbeddingProvider } from "./types";
 
@@ -23,6 +23,10 @@ export function getAIProvider(): AIProvider {
   const e = env();
   // Nur Tests/E2E (in Produktion durch env() gesperrt)
   if (e.AI_PROVIDER === "scripted") return new ScriptedProvider(demoScript);
+  if (e.AI_PROVIDER === "gemini") {
+    if (!e.GEMINI_API_KEY) throw notConfigured("Gemini", "GEMINI_API_KEY");
+    return new OpenAIProvider(e.GEMINI_API_KEY, e.GEMINI_MODEL, GEMINI_BASE_URL);
+  }
   if (e.AI_PROVIDER === "openai") {
     if (!e.OPENAI_API_KEY) throw notConfigured("OpenAI", "OPENAI_API_KEY");
     return new OpenAIProvider(e.OPENAI_API_KEY, e.OPENAI_MODEL);
@@ -40,6 +44,7 @@ export function isAIConfigured(): boolean {
   if (override) return true;
   const e = env();
   if (e.AI_PROVIDER === "scripted") return true;
+  if (e.AI_PROVIDER === "gemini") return Boolean(e.GEMINI_API_KEY);
   return e.AI_PROVIDER === "openai" ? Boolean(e.OPENAI_API_KEY) : Boolean(e.ANTHROPIC_API_KEY);
 }
 
@@ -47,7 +52,9 @@ export function isAIConfigured(): boolean {
 export function getEmbeddingProvider(): EmbeddingProvider | null {
   if (embeddingOverride !== undefined) return embeddingOverride;
   const e = env();
-  return e.OPENAI_API_KEY ? new OpenAIEmbeddings(e.OPENAI_API_KEY, e.OPENAI_EMBEDDING_MODEL) : null;
+  if (e.OPENAI_API_KEY) return new OpenAIEmbeddings(e.OPENAI_API_KEY, e.OPENAI_EMBEDDING_MODEL);
+  if (e.GEMINI_API_KEY) return new OpenAIEmbeddings(e.GEMINI_API_KEY, e.GEMINI_EMBEDDING_MODEL, GEMINI_BASE_URL);
+  return null;
 }
 
 function notConfigured(label: string, variable: string) {

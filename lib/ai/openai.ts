@@ -2,12 +2,16 @@ import OpenAI from "openai";
 import { AppError } from "@/lib/errors";
 import type { AIContent, AIMessage, AIProvider, EmbeddingProvider, GenerateRequest, GenerateResponse, StopReason } from "./types";
 
+/** Gemini über den OpenAI-kompatiblen Endpunkt von Google (kostenloses Kontingent verfügbar). */
+export const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/";
+
 export class OpenAIProvider implements AIProvider {
-  readonly id = "openai";
+  readonly id: string;
   private client: OpenAI;
 
-  constructor(apiKey: string, readonly model: string) {
-    this.client = new OpenAI({ apiKey });
+  constructor(apiKey: string, readonly model: string, baseURL?: string) {
+    this.client = new OpenAI({ apiKey, baseURL });
+    this.id = baseURL === GEMINI_BASE_URL ? "gemini" : "openai";
   }
 
   async generate(req: GenerateRequest): Promise<GenerateResponse> {
@@ -15,7 +19,9 @@ export class OpenAIProvider implements AIProvider {
       const res = await this.client.chat.completions.create(
         {
           model: this.model,
-          max_completion_tokens: req.maxTokens ?? 16000,
+          ...(this.id === "gemini"
+            ? { max_tokens: req.maxTokens ?? 16000 }
+            : { max_completion_tokens: req.maxTokens ?? 16000 }),
           messages: [{ role: "system", content: req.system }, ...req.messages.flatMap(toOpenAIMessages)],
           tools: req.tools?.length
             ? req.tools.map((t) => ({
@@ -100,12 +106,13 @@ function mapOpenAIError(err: unknown): unknown {
 }
 
 export class OpenAIEmbeddings implements EmbeddingProvider {
-  readonly id = "openai";
+  readonly id: string;
   readonly dimensions = 1536;
   private client: OpenAI;
 
-  constructor(apiKey: string, private model: string) {
-    this.client = new OpenAI({ apiKey });
+  constructor(apiKey: string, private model: string, baseURL?: string) {
+    this.client = new OpenAI({ apiKey, baseURL });
+    this.id = baseURL === GEMINI_BASE_URL ? "gemini" : "openai";
   }
 
   async embed(texts: string[]): Promise<number[][]> {
