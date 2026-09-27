@@ -6,6 +6,12 @@ const schema = z.object({
   APP_URL: z.string().url().default("http://localhost:3000"),
   TOKEN_ENCRYPTION_KEY: z.string().min(1),
   ALLOW_DEV_LOGIN: z.enum(["true", "false"]).default("false"),
+  OWNER_EMAIL: z.string().email().optional().or(z.literal("").transform(() => undefined)),
+  OWNER_PASSWORD: z
+    .string()
+    .optional()
+    .transform((v) => v || undefined)
+    .refine((v) => v === undefined || v.length >= 12, "OWNER_PASSWORD muss mindestens 12 Zeichen haben."),
 
   AI_PROVIDER: z.enum(["anthropic", "openai", "gemini", "llama", "scripted"]).default("anthropic"),
   ANTHROPIC_API_KEY: z.string().optional(),

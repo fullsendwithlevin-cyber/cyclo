@@ -85,7 +85,8 @@ auf die öffentliche HTTPS-URL setzen (Session-Cookie ist dann `__Host-`/`Secure
 | Server | Oracle Cloud „Always Free“ (ARM-VM, 4 Kerne/24 GB) oder eigener PC/Raspberry Pi mit Docker |
 | Domain + HTTPS | DuckDNS-Subdomain (z. B. `mein-name.duckdns.org`) + Caddy-Profil aus `docker-compose.yml` |
 | KI | `AI_PROVIDER=gemini` + `GEMINI_API_KEY` von aistudio.google.com (Gratis-Kontingent mit Ratenlimits) **oder** `AI_PROVIDER=llama`: Ollama im Compose-Profil `llama` (lokal, ohne Konto) bzw. Groq (Gratis-Kontingent) |
-| Google-Login/Calendar/Gmail | Google Cloud OAuth-Client (gratis; App im Modus „Testing“, eigene Adresse als Testnutzer) |
+| Anmeldung | `OWNER_EMAIL` + `OWNER_PASSWORD` (ohne Google) oder Google-OAuth |
+| Google Calendar/Gmail (optional) | Google Cloud OAuth-Client (gratis; App im Modus „Testing“, eigene Adresse als Testnutzer) |
 | Datenbank, Worker | im Docker-Compose enthalten |
 
 Ablauf auf dem Server:
@@ -95,7 +96,7 @@ git clone https://github.com/fullsendwithlevin-cyber/cyclo && cd cyclo
 cp .env.example .env
 # .env: APP_URL=https://mein-name.duckdns.org, ALLOW_DEV_LOGIN=false,
 #       TOKEN_ENCRYPTION_KEY=$(openssl rand -base64 32), AI_PROVIDER=gemini, GEMINI_API_KEY=…,
-#       GOOGLE_CLIENT_ID/SECRET=…, POSTGRES_PASSWORD=<zufällig>
+#       OWNER_EMAIL=…, OWNER_PASSWORD=… (oder GOOGLE_CLIENT_ID/SECRET), POSTGRES_PASSWORD=<zufällig>
 DOMAIN=mein-name.duckdns.org docker compose --profile https up -d --build
 ```
 
