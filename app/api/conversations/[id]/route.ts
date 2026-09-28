@@ -3,6 +3,8 @@ import { db } from "@/lib/database/prisma";
 import { AppError } from "@/lib/errors";
 import { api, parseBody } from "@/lib/http/api";
 
+const STALE_RUN_MS = 15 * 60_000;
+
 async function own(userId: string, id: string) {
   const c = await db.conversation.findFirst({ where: { id, userId } });
   if (!c) throw new AppError({ code: "NOT_FOUND", action: "Unterhaltung", reason: "Nicht gefunden." });
@@ -17,8 +19,27 @@ export const GET = api<{ id: string }>(async ({ user, params }) => {
     where: { userId: user.id, run: { conversationId: params.id } },
     select: { id: true, status: true },
   });
-  const runs = await db.agentRun.findMany({ where: { conversationId: params.id }, select: { id: true, status: true, steps: { orderBy: { index: "asc" }, select: { title: true, status: true } } } });
-  return { conversation, messages, toolCallStatus: Object.fromEntries(toolCalls.map((t) => [t.id, t.status])), runs };
+  const runs = await db.agentRun.findMany({
+    where: { conversationId: params.id },
+    select: {
+      id: true,
+      status: true,
+      startedAt: true,
+      steps: { orderBy: { index: "asc" }, select: { title: true, status: true } },
+      toolCalls: { where: { confirmedAt: { not: null } }, orderBy: { confirmedAt: "desc" }, take: 1, select: { confirmedAt: true } },
+    },
+  });
+  // Ein Run, der nach einem Neustart hängen geblieben ist, soll den Chat nicht dauerhaft blockieren
+  const staleBefore = Date.now() - STALE_RUN_MS;
+  return {
+    conversation,
+    messages,
+    toolCallStatus: Object.fromEntries(toolCalls.map((t) => [t.id, t.status])),
+    runs: runs.map(({ startedAt, toolCalls: confirmed, ...r }) => {
+      const lastActivity = Math.max(startedAt.getTime(), confirmed[0]?.confirmedAt?.getTime() ?? 0);
+      return { ...r, status: r.status === "RUNNING" && lastActivity < staleBefore ? "STALE" : r.status };
+    }),
+  };
 });
 
 export const PATCH = api<{ id: string }>(async ({ req, user, params }) => {

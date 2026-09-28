@@ -15,6 +15,8 @@ export class ScriptedProvider implements AIProvider {
 
   async generate(req: GenerateRequest): Promise<GenerateResponse> {
     this.calls.push(structuredClone({ ...req, signal: undefined }));
+    // Simuliert ein langsames Modell (E2E: Seite verlassen, während der Agent noch arbeitet)
+    if (/\(langsam\)/.test(lastUserText(req.messages))) await new Promise((r) => setTimeout(r, 4000));
     const content = this.script(req, this.calls.length);
     return {
       content,
