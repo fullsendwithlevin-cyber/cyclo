@@ -72,4 +72,7 @@ export function resetEnvCache() {
   cached = undefined;
 }
 
+/** Secure-/__Host-Cookies nur über HTTPS (lokaler Betrieb über http://localhost oder im WLAN bleibt möglich). */
+export const isHttpsApp = () => env().APP_URL.startsWith("https://");
+
 export const isDevLoginEnabled = () => env().ALLOW_DEV_LOGIN === "true" && env().NODE_ENV !== "production";

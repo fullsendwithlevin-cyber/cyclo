@@ -77,6 +77,20 @@ test("Agent: Prüfung organisieren im Modus „Sicher“ → Plan sichtbar → B
   await expect(page.getByText("Lerntermine eintragen").first()).toBeVisible();
 });
 
+test("Chat: Seite während der Antwort verlassen → Agent arbeitet weiter, Antwort erscheint beim Zurückkehren", async ({ authed: page }) => {
+  await page.goto("/chat");
+  await page.getByLabel("Nachricht", { exact: true }).fill("Kurze Frage (langsam)");
+  await page.getByRole("button", { name: "Senden" }).click();
+  await expect(page).toHaveURL(/\/chat\/[a-z0-9]+/);
+  const url = page.url();
+
+  await page.goto("/tasks");
+  await page.goto(url);
+  await expect(page.getByText(/Arbeite noch daran/)).toBeVisible();
+  await expect(page.getByText("Ich habe verstanden: „Kurze Frage (langsam)“. (Test-Modus)")).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByText(/Arbeite noch daran/)).toHaveCount(0);
+});
+
 test("Dokument hochladen → im Hintergrund indexiert → durchsuchbar", async ({ authed: page }) => {
   mkdirSync("storage", { recursive: true });
   const file = "storage/e2e-kirchhoff.md";

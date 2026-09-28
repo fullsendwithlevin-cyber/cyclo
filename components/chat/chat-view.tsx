@@ -45,7 +45,10 @@ const SUGGESTIONS = ["Was habe ich heute zu tun?", "Organisiere meine nächste P
 
 export function ChatView({ conversationId: initialId, initialQuery }: { conversationId: string | null; initialQuery?: string }) {
   const [conversationId, setConversationId] = useState<string | null>(initialId);
-  const { data, error, isLoading, mutate } = useApi<ConversationData>(conversationId ? `/api/conversations/${conversationId}` : null);
+  // Läuft der Agent im Hintergrund weiter (Seite verlassen und zurückgekehrt), wird regelmässig nachgeladen
+  const { data, error, isLoading, mutate } = useApi<ConversationData>(conversationId ? `/api/conversations/${conversationId}` : null, {
+    refreshInterval: (d) => (d?.runs.some((r) => r.status === "RUNNING") ? 3000 : 0),
+  });
   const { data: me } = useApi<Me>("/api/me");
   const { data: list, mutate: mutateList } = useApi<{ conversations: { id: string; title: string; updatedAt: string; agentRuns: { id: string }[] }[] }>("/api/conversations");
 
@@ -64,7 +67,8 @@ export function ChatView({ conversationId: initialId, initialQuery }: { conversa
 
   const messages = [...(data?.messages ?? []), ...pending.filter((p) => !data?.messages.some((m) => m.id === p.id))];
   const toolCallStatus = { ...(data?.toolCallStatus ?? {}), ...statusOverride };
-  const busy = live !== null;
+  const backgroundRun = live === null ? data?.runs.find((r) => r.status === "RUNNING") : undefined;
+  const busy = live !== null || backgroundRun !== undefined;
   const stepsByRun = new Map((data?.runs ?? []).map((r) => [r.id, r.steps]));
 
   useEffect(() => {
@@ -246,6 +250,17 @@ export function ChatView({ conversationId: initialId, initialQuery }: { conversa
                   <p className="text-sm text-muted-foreground">Arbeite daran …</p>
                   {live.steps.length > 0 && <RunSteps steps={live.steps} className="rounded-lg border p-3" />}
                   <ToolActivity parts={live.tools} />
+                </div>
+              </div>
+            )}
+            {backgroundRun && (
+              <div className="flex gap-3" aria-live="polite">
+                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent text-accent-foreground">
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                </span>
+                <div className="min-w-0 flex-1 space-y-2">
+                  <p className="text-sm text-muted-foreground">Arbeite noch daran – die Antwort erscheint hier automatisch …</p>
+                  {backgroundRun.steps.length > 0 && <RunSteps steps={backgroundRun.steps} className="rounded-lg border p-3" />}
                 </div>
               </div>
             )}

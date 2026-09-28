@@ -80,6 +80,8 @@ auf die öffentliche HTTPS-URL setzen (Session-Cookie ist dann `__Host-`/`Secure
 
 ## 9. Kostenlos betreiben
 
+Schritt-für-Schritt für den eigenen Windows-PC: [WINDOWS.md](WINDOWS.md).
+
 | Baustein | Gratis-Option |
 |---|---|
 | Server | Oracle Cloud „Always Free“ (ARM-VM, 4 Kerne/24 GB) oder eigener PC/Raspberry Pi mit Docker |
