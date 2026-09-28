@@ -5,13 +5,16 @@ import type { AIContent, AIMessage, AIProvider, EmbeddingProvider, GenerateReque
 /** Gemini über den OpenAI-kompatiblen Endpunkt von Google (kostenloses Kontingent verfügbar). */
 export const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/";
 
+/** Anbieter mit OpenAI-kompatibler API (OpenAI selbst, Gemini, Llama über Ollama/Groq). */
+export type CompatOptions = { baseURL?: string; id?: "openai" | "gemini" | "llama" };
+
 export class OpenAIProvider implements AIProvider {
   readonly id: string;
   private client: OpenAI;
 
-  constructor(apiKey: string, readonly model: string, baseURL?: string) {
-    this.client = new OpenAI({ apiKey, baseURL });
-    this.id = baseURL === GEMINI_BASE_URL ? "gemini" : "openai";
+  constructor(apiKey: string, readonly model: string, opts: CompatOptions = {}) {
+    this.client = new OpenAI({ apiKey, baseURL: opts.baseURL });
+    this.id = opts.id ?? "openai";
   }
 
   async generate(req: GenerateRequest): Promise<GenerateResponse> {
@@ -19,7 +22,7 @@ export class OpenAIProvider implements AIProvider {
       const res = await this.client.chat.completions.create(
         {
           model: this.model,
-          ...(this.id === "gemini"
+          ...(this.id !== "openai"
             ? { max_tokens: req.maxTokens ?? 16000 }
             : { max_completion_tokens: req.maxTokens ?? 16000 }),
           messages: [{ role: "system", content: req.system }, ...req.messages.flatMap(toOpenAIMessages)],
@@ -110,9 +113,9 @@ export class OpenAIEmbeddings implements EmbeddingProvider {
   readonly dimensions = 1536;
   private client: OpenAI;
 
-  constructor(apiKey: string, private model: string, baseURL?: string) {
-    this.client = new OpenAI({ apiKey, baseURL });
-    this.id = baseURL === GEMINI_BASE_URL ? "gemini" : "openai";
+  constructor(apiKey: string, private model: string, opts: CompatOptions = {}) {
+    this.client = new OpenAI({ apiKey, baseURL: opts.baseURL });
+    this.id = opts.id ?? "openai";
   }
 
   async embed(texts: string[]): Promise<number[][]> {
@@ -123,15 +126,32 @@ export class OpenAIEmbeddings implements EmbeddingProvider {
         const res = await this.client.embeddings.create({
           model: this.model,
           input: texts.slice(i, i + 96).map((t) => t.slice(0, 24_000)),
-          dimensions: this.dimensions,
+          // Lokale Modelle (Ollama) kennen keine wählbare Dimension → werden unten aufgefüllt
+          ...(this.id === "llama" ? {} : { dimensions: this.dimensions }),
         });
-        out.push(...res.data.sort((a, b) => a.index - b.index).map((d) => d.embedding));
+        out.push(...res.data.sort((a, b) => a.index - b.index).map((d) => fitDimensions(d.embedding, this.dimensions)));
       }
       return out;
     } catch (err) {
       throw mapOpenAIError(err);
     }
   }
+}
+
+/**
+ * Passt einen Vektor an die DB-Spalte (vector(1536)) an. Auffüllen mit Nullen ändert weder
+ * Skalarprodukt noch Norm – die Kosinus-Ähnlichkeit bleibt exakt erhalten.
+ */
+export function fitDimensions(vec: number[], dims: number): number[] {
+  if (vec.length === dims) return vec;
+  if (vec.length > dims)
+    throw new AppError({
+      code: "UNSUPPORTED",
+      action: "Embeddings erzeugen",
+      reason: `Das Embedding-Modell liefert ${vec.length} Dimensionen, erlaubt sind höchstens ${dims}.`,
+      solution: "Ein kleineres Embedding-Modell wählen (z. B. nomic-embed-text).",
+    });
+  return vec.concat(new Array(dims - vec.length).fill(0));
 }
 
 export async function transcribeWithOpenAI(apiKey: string, model: string, file: File): Promise<string> {

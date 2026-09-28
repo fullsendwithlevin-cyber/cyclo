@@ -40,6 +40,16 @@ services:
     volumes: [uploads:/app/storage]
     depends_on: { migrate: { condition: service_completed_successfully } }
 
+  # Optional: Llama lokal über Ollama (kostenlos, ohne Konto). Start mit
+  #   docker compose --profile llama up -d --build
+  #   docker compose exec ollama ollama pull llama3.1:8b
+  #   docker compose exec ollama ollama pull nomic-embed-text
+  # und in .env: AI_PROVIDER=llama, LLAMA_BASE_URL=http://ollama:11434/v1
+  ollama:
+    image: ollama/ollama
+    profiles: [llama]
+    volumes: [ollama:/root/.ollama]
+
   # Optional: automatisches HTTPS (Let's Encrypt). Start mit
   #   DOMAIN=mein-name.duckdns.org docker compose --profile https up -d --build
   caddy:
@@ -54,3 +64,4 @@ volumes:
   pgdata:
   uploads:
   caddy:
+  ollama:

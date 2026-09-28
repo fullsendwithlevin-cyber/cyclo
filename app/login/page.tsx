@@ -3,7 +3,9 @@ import { Sparkles } from "lucide-react";
 import { getSessionUser } from "@/lib/auth/session";
 import { isOAuthProviderConfigured } from "@/lib/auth/oauth";
 import { isDevLoginEnabled } from "@/lib/env";
+import { isPasswordLoginEnabled } from "@/lib/auth/password";
 import { DevLoginForm } from "./dev-login-form";
+import { PasswordLoginForm } from "./password-login-form";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Anmelden" };
@@ -14,6 +16,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   if (await getSessionUser()) redirect(returnTo);
   const google = isOAuthProviderConfigured("google");
   const dev = isDevLoginEnabled();
+  const password = isPasswordLoginEnabled();
 
   return (
     <main className="flex min-h-dvh items-center justify-center bg-gradient-to-b from-accent/60 to-background px-4">
@@ -47,12 +50,13 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             </svg>
             Mit Google anmelden
           </a>
-        ) : (
+        ) : password ? null : (
           <p className="rounded-lg bg-muted p-3 text-xs text-muted-foreground">
             Google-Anmeldung ist nicht konfiguriert (GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET, siehe docs/SETUP.md).
           </p>
         )}
 
+        {password && <PasswordLoginForm returnTo={returnTo} separated={google} />}
         {dev && <DevLoginForm returnTo={returnTo} />}
       </div>
     </main>
