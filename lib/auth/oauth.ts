@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { cookies } from "next/headers";
-import { env } from "@/lib/env";
+import { env, isHttpsApp } from "@/lib/env";
 import { AppError } from "@/lib/errors";
 import { decryptJson, encryptJson, randomToken, safeEqual } from "@/lib/security/crypto";
 
@@ -111,7 +111,7 @@ export async function beginOAuthFlow(opts: {
   const jar = await cookies();
   jar.set(FLOW_COOKIE, encryptJson(flow), {
     httpOnly: true,
-    secure: env().NODE_ENV === "production",
+    secure: isHttpsApp(),
     sameSite: "lax",
     path: "/api/oauth",
     maxAge: 600,

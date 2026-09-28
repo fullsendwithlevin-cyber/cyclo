@@ -1,13 +1,13 @@
 import { cookies, headers } from "next/headers";
 import { db } from "@/lib/database/prisma";
-import { env } from "@/lib/env";
+import { isHttpsApp } from "@/lib/env";
 import { AppError } from "@/lib/errors";
 import { randomToken, sha256 } from "@/lib/security/crypto";
 
 const SESSION_DAYS = 30;
 
 export function sessionCookieName() {
-  return env().NODE_ENV === "production" ? "__Host-cos_session" : "cos_session";
+  return isHttpsApp() ? "__Host-cos_session" : "cos_session";
 }
 
 export interface SessionUser {
@@ -34,7 +34,7 @@ export async function createSession(userId: string): Promise<void> {
   const jar = await cookies();
   jar.set(sessionCookieName(), token, {
     httpOnly: true,
-    secure: env().NODE_ENV === "production",
+    secure: isHttpsApp(),
     sameSite: "lax",
     path: "/",
     maxAge: SESSION_DAYS * 86400,

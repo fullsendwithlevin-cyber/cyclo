@@ -9,7 +9,9 @@ const PUBLIC_PATHS = ["/login"];
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   const isProd = process.env.NODE_ENV === "production";
-  const cookieName = isProd ? "__Host-cos_session" : "cos_session";
+  // Muss zu sessionCookieName() passen: sichere Cookies nur, wenn die App über HTTPS läuft
+  const https = (process.env.APP_URL ?? "").startsWith("https://");
+  const cookieName = https ? "__Host-cos_session" : "cos_session";
   if (!PUBLIC_PATHS.some((p) => pathname.startsWith(p)) && !request.cookies.get(cookieName)) {
     const url = new URL("/login", request.url);
     if (pathname !== "/") url.searchParams.set("returnTo", pathname + search);
@@ -29,7 +31,7 @@ export function proxy(request: NextRequest) {
     "base-uri 'self'",
     "form-action 'self'",
     "frame-ancestors 'none'",
-    ...(isProd ? ["upgrade-insecure-requests"] : []),
+    ...(https ? ["upgrade-insecure-requests"] : []),
   ].join("; ");
 
   const headers = new Headers(request.headers);
